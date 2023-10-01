@@ -1,25 +1,28 @@
 #include <iostream>
+#include <set>
 
 using namespace std;
 
 int main() {
-    int n;
-    int cnt = 0;
-    cin >> n;
-    while (n >= 0)
-    {
-        if (n % 5 == 0)
-        {
-            cnt += (n / 5);
-            cout << cnt;
-            return 0;
-        }
-        n -= 3;
-        cnt++;
-    }
-    cout << -1;
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
 
-    return 0;
+    string s;
+    cin >> s;
+
+    set<string> set;
+
+    string str = "";
+    for (int i = 0; i < s.size(); i++) {
+        for (int j = i; j < s.size(); j++) {
+            str += s[j];
+            set.insert(str);
+        }
+        str = "";
+    }
+
+    cout << set.size();
 }
 
 
@@ -1191,7 +1194,6 @@ else
 */
 #pragma endregion
 
-
 #pragma region BruteForce
 /*
 int n, m, result = 0;
@@ -1374,6 +1376,556 @@ int n;
         cnt++;
     }
     cout << -1;
+--------------------------------
+*/
+#pragma endregion
+
+#pragma region 정렬
+/*
+int t, tmp;
+cin >> t;
+
+int arr[1001];
+
+for (int i = 0; i < t; i++)
+{
+    cin >> arr[i];
+}
+
+for (int j = 0; j < t - 1; j++)
+{
+    for (int k = j + 1; k < t; k++)
+    {
+        if (arr[j] > arr[k])
+        {
+            tmp = arr[k];
+            arr[k] = arr[j];
+            arr[j] = tmp;
+        }
+    }
+}
+
+for (int i = 0; i < t; i++)
+{
+    if (i + 1 < t && arr[i] == arr[i + 1])
+        continue;
+    cout << arr[i] << "\n";
+}
+--------------------------------
+int sum = 0;
+int arr[5];
+
+for (int i = 0; i < 5; i++)
+{
+    cin >> arr[i];
+    sum += arr[i];
+}
+
+for (int i = 0; i < 4; i++)
+    for (int j = i+1; j < 5; j++)
+        if (arr[i] > arr[j])
+        {
+            int p = arr[i];
+            arr[i] = arr[j];
+            arr[j] = p;
+        }
+
+cout << sum / 5 << "\n" << arr[2];
+--------------------------------
+#include <algorithm>
+
+int n, k;
+int arr[1001];
+
+cin >> n >> k;
+for (int i = 0; i < n; i++)
+    cin >> arr[i];
+
+sort(arr, arr + n);
+
+cout << arr[n - k];
+--------------------------------
+ios::sync_with_stdio(false);
+
+int n;
+cin >> n;
+int* arr = new int[n];
+
+for (int i = 0; i < n; i++)
+    cin >> arr[i];
+
+sort(arr, arr + n);
+
+for (int i = 0; i < n; i++)
+{
+    cout << arr[i] << "\n";
+}
+--------------------------------
+ios::sync_with_stdio(false);
+cin.tie(NULL);
+cout.tie(NULL);
+
+int N;
+cin >> N;
+
+int arr[10001] = { 0 };
+
+for (int i = 0; i < N; i++) {
+    int in;
+    cin >> in;
+    arr[in] += 1;
+}
+
+for (int i = 1; i < 10001; i++) {
+    for (int j = 0; j < arr[i]; j++) {
+        cout << i << '\n';
+    }
+}
+--------------------------------
+#include<algorithm>
+
+string str;
+cin >> str;
+sort(str.begin(), str.end(), greater<char>());
+cout << str;
+--------------------------------
+#include <iostream>
+#include <algorithm>
+
+using namespace std;
+
+class coordinate {
+public:
+    int x;
+    int y;
+};
+
+bool cmp(coordinate a, coordinate b) {
+    if (a.x == b.x)
+        return a.y < b.y;
+    else
+        return a.x < b.x;
+}
+
+coordinate* c = new coordinate[100000];
+
+int main() {
+
+    int n;
+    int numx, numy;
+
+    cin >> n;
+
+    for (int i = 0; i < n; i++)
+        cin >> c[i].x >> c[i].y;
+
+    stable_sort(c, c + n, cmp);
+
+    for (int i = 0; i < n; i++)
+        cout << c[i].x << " " << c[i].y << "\n";
+ }
+--------------------------------
+class coordinate {
+public:
+    int x;
+    int y;
+};
+
+bool cmp(coordinate a, coordinate b) {
+    if (a.y == b.y)
+        return a.x < b.x;
+    else
+        return a.y < b.y;
+}
+
+coordinate* c = new coordinate[100000];
+
+int main() {
+
+    int n;
+    int numx, numy;
+
+    cin >> n;
+
+    for (int i = 0; i < n; i++)
+        cin >> c[i].x >> c[i].y;
+
+    stable_sort(c, c + n, cmp);
+
+    for (int i = 0; i < n; i++)
+        cout << c[i].x << " " << c[i].y << "\n";
+ }
+--------------------------------
+int cmp(string a, string b) {
+    if (a.length() == b.length())
+        return a < b;
+    else
+        return a.length() < b.length();
+}
+
+string word[200000];
+
+int main() {
+    int n;
+
+    cin >> n;
+
+    for (int i = 0; i < n; i++)
+        cin >> word[i];
+
+    sort(word, word + n, cmp);
+
+    for (int i = 0; i < n; i++)
+    {
+        if (word[i] == word[i-1])
+            continue;
+        cout << word[i] << "\n";
+    }
+ }
+--------------------------------
+#include <iostream>
+#include <string>
+#include <algorithm>
+#include <vector>
+
+using namespace std;
+
+bool compare(pair<int, string> a, pair<int, string> b) {
+    return a.first < b.first;
+}
+
+int main() {
+    int n;
+    cin >> n;
+    pair<int, string>tmp;
+    vector<pair<int, string>> arr;
+    for (int i = 0; i < n; i++)
+    {
+        cin >> tmp.first >> tmp.second;
+        arr.push_back(tmp);
+    }
+    stable_sort(arr.begin(), arr.end(), compare);
+
+    for (int i = 0; i < n; i++)
+    {
+        cout << arr[i].first << " " << arr[i].second << "\n";
+    }
+ }
+--------------------------------
+#include <iostream>
+#include <algorithm>
+#include <vector>
+
+using namespace std;
+
+int main() {
+    int n;
+    cin >> n;
+    vector<int> v(n);
+
+    for (int i = 0; i < n; i++)
+        cin >> v[i];
+
+    vector<int> cv(v);
+    sort(cv.begin(), cv.end());
+
+    cv.erase(unique(cv.begin(), cv.end()), cv.end());
+
+    for (int i = 0; i < n; i++)
+    {
+        auto it = lower_bound(cv.begin(), cv.end(), v[i]);
+        cout << it - cv.begin() << ' ';
+    }
+ }
+*/
+#pragma endregion
+
+#pragma region 집합
+/*
+int len, temp;
+vector<int> v;
+cin >> len;
+
+while (len--)
+{
+    cin >> temp;
+    v.push_back(temp);
+}
+
+sort(v.begin(), v.end());
+cin >> len;
+while (len--)
+{
+    cin >> temp;
+    cout << binary_search(v.begin(), v.end(), temp) << " ";
+}
+--------------------------------
+int n, m;
+cin >> n >> m;
+vector<string>v1(n);
+vector<string>result;
+for (int i = 0; i < n; i++)
+    cin >> v1[i];
+
+sort(v1.begin(), v1.end());
+
+string mm;
+int count = 0;
+for (int i = 0; i < m; i++)
+{
+    cin >> mm;
+    if (binary_search(v1.begin(), v1.end(), mm))
+        count++;
+}
+
+cout << count;
+--------------------------------
+#include <iostream>
+#include <algorithm>
+#include <set>
+
+using namespace std;
+
+
+int main() {
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+
+    set<string>s;
+    int n;
+    cin >> n;
+
+    while (n--)
+    {
+        string tmp1;
+        string tmp2;
+
+        cin >> tmp1 >> tmp2;
+
+        if (tmp2 == "enter")
+            s.insert(tmp1);
+        else
+            s.erase(tmp1);
+    }
+
+    for (auto it = s.rbegin(); it != s.rend(); it++)
+        cout << *it << "\n";
+ }
+--------------------------------
+#include <iostream>
+#include <string>
+#include <vector>
+#include <map>
+using namespace std;
+
+int N, M;
+string name[100001];
+
+map<string, int>m;
+
+int main() {
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+
+    cin >> N >> M;
+    for (int i = 1; i <= N; i++)
+    {
+        string s;
+        cin >> s;
+        name[i] = s;
+        m.insert(make_pair(s, i));
+    }
+
+    for (int i = 1; i <= M; i++)
+    {
+        string s;
+        int n;
+        cin >> s;
+        if (isdigit(s[0]) == true)
+        {
+            n = stoi(s);
+            cout << name[n] << "\n";
+        }
+        else
+        {
+            auto it = m.find(s);
+            cout << it->second << "\n";
+        }
+    }
+}
+--------------------------------
+int N, M, x;
+cin >> N;
+map<int, int> arr;
+for (int i = 0; i < N; i++) {
+    cin >> x;
+    arr[x]++;
+}
+
+cin >> M;
+for (int i = 0; i < M; i++) {
+    cin >> x;
+    cout << arr[x] << " ";
+}
+--------------------------------
+#include <iostream>
+#include <unordered_map>
+#include <algorithm>
+#include <vector>
+
+using namespace std;
+
+int main() {
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
+
+    int N, M; cin >> N >> M;
+    string str1 = "";
+    unordered_map<string, int> umap;
+    vector<string> ansVec;
+    for (int i = 0; i < N; i++) {
+        cin >> str1;
+        umap[str1] = 0;
+    }
+    string str2 = "";
+    for (int i = 0; i < M; i++) {
+        cin >> str2;
+        if (umap.find(str2) != umap.end()) {    //보도 못한 사람이 듣도 못한 사람 명단에도 있으면
+            ansVec.push_back(str2);
+        }
+    }
+
+    sort(ansVec.begin(), ansVec.end());
+    cout << ansVec.size() << "\n";
+    for (int i = 0; i < ansVec.size(); i++) {
+        cout << ansVec[i] << "\n";
+    }
+}
+--------------------------------
+#include <iostream>
+#include <map>
+
+using namespace std;
+
+map<int, bool> m;
+int N, M;
+int num;
+
+int main() {
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
+
+    cin >> N >> M;
+    for (int i = 0; i < N + M; i++)
+    {
+        cin >> num;
+        if (m[num] == true)
+            m.erase(num);
+        else
+            m[num] = true;
+    }
+    cout << m.size();
+}
+--------------------------------
+#include <iostream>
+#include <set>
+
+using namespace std;
+
+int main() {
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
+
+    string s;
+    cin >> s;
+
+    set<string> set;
+
+    string str = "";
+    for (int i = 0; i < s.size(); i++) {
+        for (int j = i; j < s.size(); j++) {
+            str += s[j];
+            set.insert(str);
+        }
+        str = "";
+    }
+
+    cout << set.size();
+}
+*/
+#pragma endregion
+
+
+#pragma region 조합론
+/*
+int n;
+cin >> n;
+
+cout << n*(n - 1);
+--------------------------------
+int n;
+cin >> n;
+
+cout << (1<<n);
+--------------------------------
+int factorial(int n) {
+    if (n > 2)
+        n *= factorial(n - 1);
+    return n;
+}
+
+int main() {
+
+int n, result = 1;
+cin >> n;
+if (n != 0)
+{
+    result = factorial(n);
+}
+cout << result;
+--------------------------------
+int Factorial(int n) {
+    if (n == 0)
+        return 1;
+
+    int result = 1;
+
+    for (int i = n; i >= 1; i--)
+    {
+        result *= i;
+    }
+
+    return result;
+}
+
+int main() {
+
+int n, k;
+
+cin >> n >> k;
+cout << Factorial(n) / (Factorial(k) * Factorial(n - k));
+--------------------------------
+int t;
+cin >> t;
+
+while (t--)
+{
+    int n, m;
+    cin >> n >> m;
+
+    long long ans = 1;
+
+    int r = 1;
+    for (int i = m; i > m-n; i--)
+    {
+        ans *= i;
+        ans /= r++;
+    }
+    cout << ans << "\n";
+}
 --------------------------------
 */
 #pragma endregion
