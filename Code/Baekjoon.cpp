@@ -1,32 +1,51 @@
 #include <iostream>
-#include <set>
+#include <queue>
+#include <stack>
 
 using namespace std;
+
+stack <int> st;
+queue <int> q;
+bool flag[100000];
 
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
-    cout.tie(NULL);
 
-    string s;
-    cin >> s;
-
-    set<string> set;
-
-    string str = "";
-    for (int i = 0; i < s.size(); i++) {
-        for (int j = i; j < s.size(); j++) {
-            str += s[j];
-            set.insert(str);
-        }
-        str = "";
+    int n, m, input, x;
+    cin >> n;
+    for (int i = 0; i < n; i++)
+    {
+        cin >> flag[i];
     }
-
-    cout << set.size();
+    for (int i = 0; i < n; i++)
+    {
+        cin >> input;
+        if (flag[i] == 0)
+        {
+            st.push(input);
+        }
+    }
+    while (!st.empty())
+    {
+        q.push(st.top());
+        st.pop();
+    }
+    cin >> m;
+    for (int i = 0; i < m; i++)
+    {
+        cin >> input;
+        q.push(input);
+    }
+    for (int i = 0; i < m; i++)
+    {
+        cout << q.front() << " ";
+        q.pop();
+    }
 }
 
-
 // 문제별 순서대로
+#pragma region 문제 풀이
 #pragma region arithmetic / condition 
 /*int a, b;
 cin >> a;
@@ -1858,6 +1877,712 @@ int main() {
 */
 #pragma endregion
 
+#pragma region 약수, 배수와 소수
+/*
+int Divide(int x, int y) {
+    if (x % y == 0)
+        return y;
+    else
+        return Divide(y, x % y);
+}
+
+int main() {
+
+    int t;
+    int a, b;
+    cin >> t;
+
+    for (int i = 0; i < t; i++)
+    {
+        cin >> a >> b;
+        if (a >= b)
+            cout << a * b / Divide(a, b) << "\n";
+        else
+            cout << a * b / Divide(b, a) << "\n";
+    }
+}
+---------------------------------
+void Swap(int& a, int& b) {
+    int temp = a;
+    a = b;
+    b = temp;
+}
+
+long long Gcd(int a, int b) {
+    int temp;
+    if (a < b)
+        Swap(a, b);
+    while (b != 0)
+    {
+        temp = a % b;
+        a = b;
+        b = temp;
+    }
+    return a;
+}
+
+long long Lcm(long long a, long long b) {
+    return (a * b) / Gcd(a, b);
+}
+
+int main() {
+
+    long long a, b;
+    cin >> a >> b;
+    cout << Lcm(a, b);
+}
+---------------------------------
+long Gcd(long a, long b) {
+    if (b > a)
+        return Gcd(b, a);
+    if (a % b == 0)
+        return b;
+    else
+        return Gcd(b, a % b);
+}
+
+int main() {
+
+    long up, down, up1, down1, n, m;
+
+    cin >> up >> down >> up1 >> down1;
+    n = down1 * up + up1 * down;
+    m = down1 * down;
+
+    cout << n / Gcd(n, m) << " " << m / Gcd(n, m);
+}
+---------------------------------
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+int Gcd(int a, int b) {
+    if (a % b == 0)
+        return b;
+    return Gcd(b, a % b);
+}
+
+int main() {
+
+    ios_base::sync_with_stdio(false);
+
+    long n;
+    cin >> n;
+
+    vector<long>vec;
+    vec.resize(n);
+
+    for (int i = 0; i < n; i++)
+        cin >> vec[i];
+
+    sort(vec.begin(), vec.end());
+
+    int temp = vec[1] - vec[0];
+    for (int i = 1; i < n-1; i++)
+    {
+        int next = vec[i + 1] - vec[i];
+        if (next > temp)
+        {
+            int swap_num = next;
+            next = temp;
+            temp = swap_num;
+        }
+        temp = Gcd(temp, next);
+    }
+
+    int answer = ((vec[n - 1] - vec[0]) / temp) - n + 1;
+    cout << answer << "\n";
+
+    return 0;
+}
+---------------------------------
+bool isPrime(long long num)
+{
+    if (num <= 1)
+        return false;
+
+    if (num == 2 || num == 3)
+        return true;
+
+    if (num % 2 == 0 || num % 3 == 0)
+        return false;
+
+    for (long long i = 5; i * i <= num; ++i)
+    {
+        if (num % i == 0 || num % (i + 2) == 0)
+            return false;
+    }
+
+    return true;
+}
+
+int main() {
+
+    ios_base::sync_with_stdio(false);
+
+    long long N, n;
+    cin >> N;
+
+    for (int i = 0; i < N; ++i)
+    {
+        std::cin >> n;
+        while (!isPrime(n))
+            n++;
+        cout << n << endl;
+    }
+
+    return 0;
+}
+---------------------------------
+#include <iostream>
+
+using namespace std;
+
+#define MAX 1000000
+
+int arr[MAX + 1]{ 0, };
+
+int main() {
+
+    ios_base::sync_with_stdio(false);
+
+    int m, n;
+    cin >> m >> n;
+
+    for (int i = 2; i <= n; i++)
+        arr[i] = i;
+
+    for (int i = 2; i*i <= n; i++)
+    {
+        if (arr[i] == 0)
+            continue;
+        for (int j = i * i; j <= n; j += i)
+            arr[j] = 0;
+    }
+
+    for (int i = m; i <= n; i++)
+    {
+        if (arr[i] != 0)
+            cout << arr[i] << '\n';
+    }
+
+    return 0;
+}
+---------------------------------
+int n, m, cnt = 0;
+
+while (1) {
+    cin >> n;
+    if (!n)	//0 입력시 종료
+        break;
+
+    for (int i = n + 1; i <= 2 * n; i++) {
+        m = sqrt(i);
+        if (m == 1 && i != 1) {	//2,3인 경우
+            cnt++;
+            continue;
+        }
+        if (i % 2) {	//홀수일 경우
+            for (int j = 2; j <= m; j++) {
+                if (!(i % j))
+                    break;
+                if (j == m) {
+                    cnt++;
+                }
+            }
+        }
+    }
+    cout << cnt << '\n';
+    cnt = 0;
+}
+---------------------------------
+#define N 1000001
+
+int main() {
+
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+
+    int t;
+    cin >> t;
+
+    bool arr[N];
+    for (int i = 0; i < N; i++) {
+        arr[i] = true;
+    }
+    arr[0] = arr[1] = false;
+
+    for (int i = 2; i * i < N; i++) {
+        if (arr[i]) {
+            for (int j = i * 2; j <= N; j += i) {
+                arr[j] = false;
+            }
+        }
+    }
+
+    while (t--) {
+        int result = 0;
+        int n;
+        cin >> n;
+
+        for (int i = 0; i <= n / 2; i++) {
+            int a = i;
+            int b = n - i;
+
+            if (arr[a] && arr[b]) {
+                result++;
+            }
+        }
+
+        cout << result << '\n';
+    }
+
+    return 0;
+}
+---------------------------------
+int n, i = 1;
+
+cin >> n;
+while (i * i <= n)
+{
+    i++;
+}
+cout << i - 1 << "\n";
+---------------------------------
+*/
+#pragma endregion
+
+#pragma region 스택, 큐, 덱
+/*
+int N;
+cin >> N;
+
+stack<int> S;
+
+int order;
+while (N--) {
+    cin >> order;
+    switch (order) {
+    case 1:
+        int num;
+        cin >> num;
+        S.push(num);
+        break;
+    case 2:
+        if (!S.empty()) {
+            cout << S.top() << '\n';
+            S.pop();
+        }
+        else {
+            cout << -1 << '\n';
+        }
+        break;
+    case 3:
+        cout << S.size() << '\n';
+        break;
+    case 4:
+        if (!S.empty()) {
+            cout << 0 << '\n';
+        }
+        else {
+            cout << 1 << '\n';
+        }
+        break;
+    case 5:
+        if (!S.empty()) {
+            cout << S.top() << '\n';
+        }
+        else {
+            cout << -1 << '\n';
+        }
+        break;
+    }
+}
+----------------------------
+stack<int> s;
+int K;
+int num;
+int stack_size;
+int sum = 0;
+
+cin >> K;	// 입력받을 정수의 개수
+
+for (int i = 0; i < K; i++) {
+    cin >> num;
+    if (num == 0) {
+        s.pop();
+    }
+    else
+        s.push(num);
+}
+
+stack_size = s.size();
+for (int i = 0; i < stack_size; i++) {
+    sum += s.top();
+    s.pop();
+}
+
+cout << sum;
+----------------------------
+int k;
+cin >> k;
+
+while (k > 0) {
+    k--;
+    string input;
+    cin >> input;
+
+    stack<char> st;
+    string answer = "YES";
+    for (int i = 0; i < input.length(); i++) {
+        if (input[i] == '(') {
+            st.push(input[i]);
+        }
+        else if (!st.empty() && input[i] == ')' && st.top() == '(') {
+            st.pop();
+        }
+        else {
+            answer = "NO";
+            break;
+        }
+    }
+
+    if (!st.empty())
+        answer = "NO";
+
+    cout << answer << endl;
+}
+----------------------------
+#include <iostream>
+#include <stack>
+#include <string>
+using namespace std;
+
+int main(void) {
+    ios::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
+
+    while (1)
+    {
+        string str;
+        getline(cin, str);
+        stack<char>s;
+        bool ans = true;
+        if (str.length() == 1 && str[0] == '.')
+            break;
+        for (int i = 0; i < str.length(); i++)
+        {
+            if (str[i] == '(' || str[i] == '[')
+            {
+                s.push(str[i]);
+            }
+            if (str[i] == ')')
+            {
+                if (s.empty() || s.top() == '[')
+                    ans = false;
+                else
+                    s.pop();
+            }
+            if (str[i] == ']')
+            {
+                if (s.empty() || s.top() == '(')
+                    ans = false;
+                else
+                    s.pop();
+            }
+        }
+        if (s.empty() && ans)
+            cout << "yes" << "\n";
+        else
+            cout << "no" << "\n";
+    }
+
+    return 0;
+}
+----------------------------
+int n, num = 1, cnt = 0;
+cin >> n;
+for (int i = 0; i < n; i++) {
+    cin >> arr[i];
+}
+stack<int> s;
+for (int i = 0; i < n; i++) {
+    if (s.empty() && cnt < n) {
+        s.push(arr[cnt++]);
+    }
+    while (s.top() != num && cnt < n) {
+        s.push(arr[cnt++]);
+    }
+    if (!s.empty() && s.top() == num) {
+        s.pop();
+        num++;
+    }
+    else {
+        cout << "Sad" << "\n";
+        return 0;
+    }
+}
+cout << "Nice" << "\n";
+----------------------------
+#include <iostream>
+#include <queue>
+
+using namespace std;
+
+int main() {
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+
+    queue<int> Q;
+    string command;
+    int t, cnt;
+
+    cin >> t;
+
+    for (int i = 0; i < t; i++) {
+        cin >> command;
+
+        if (command == "push") {
+            cin >> cnt;
+            Q.push(cnt);
+        }
+        else if (command == "pop") {
+            if (Q.empty()) {
+                cout << "-1" << '\n';
+            }
+            else {
+                cout << Q.front() << '\n';
+                Q.pop();
+            }
+        }
+        else if (command == "front") {
+            if (Q.empty()) {
+                cout << "-1" << '\n';
+            }
+            else {
+                cout << Q.front() << '\n';
+            }
+        }
+        else if (command == "back") {
+            if (Q.empty()) {
+                cout << "-1" << '\n';
+            }
+            else {
+                cout << Q.back() << '\n';
+            }
+        }
+        else if (command == "size")
+            cout << Q.size() << '\n';
+        else if (command == "empty")
+            cout << Q.empty() << '\n';
+        else if (command == "top") {
+            if (Q.empty()) {
+                cout << "-1" << '\n';
+            }
+            else {
+                cout << Q.front() << '\n';
+            }
+        }
+    }
+
+    return 0;
+}
+----------------------------
+queue<int> Q;
+int N;
+
+cin >> N;
+
+for (int i = 1; i <= N; i++) {
+    Q.push(i);
+}
+
+
+while (Q.size() > 1) {
+    Q.pop();
+    Q.push(Q.front());
+    Q.pop();
+}
+
+cout << Q.front();
+----------------------------
+int N, K;
+queue<int> q;
+
+cin >> N >> K;
+for (int i = 1; i <= N; i++) q.push(i);
+
+cout << "<";
+
+while (q.size() != 0)
+{
+    for (int i = 1; i < K; i++)
+    {
+        q.push(q.front()); // i번째 카드를 맨뒤로
+        q.pop();
+    }
+    cout << q.front();
+    if (q.size() != 1) cout << ", ";
+    q.pop();
+}
+cout << ">";
+----------------------------
+deque<int> dq;
+int N, cmd, x;
+
+cin >> N;
+while (N--)
+{
+    cin >> cmd;
+    switch (cmd)
+    {
+    case 1:
+        cin >> x;
+        dq.push_front(x);
+        break;
+    case 2:
+        cin >> x;
+        dq.push_back(x);
+        break;
+    case 3:
+        if (dq.empty())
+        {
+            cout << -1 << "\n";
+        }
+        else
+        {
+            cout << dq.front() << "\n";
+            dq.pop_front();
+        }
+        break;
+    case 4:
+        if (dq.empty())
+        {
+            cout << -1 << "\n";
+        }
+        else
+        {
+            cout << dq.back() << "\n";
+            dq.pop_back();
+        }
+        break;
+    case 5:
+        cout << dq.size() << "\n";
+        break;
+    case 6:
+        (dq.empty()) ? cout << 1 << "\n" : cout << 0 << "\n";
+        break;
+    case 7:
+        if (dq.empty())
+        {
+            cout << -1 << "\n";
+        }
+        else
+        {
+            cout << dq.front() << "\n";
+        }
+        break;
+    case 8:
+        if (dq.empty())
+        {
+            cout << -1 << "\n";
+        }
+        else
+        {
+            cout << dq.back() << "\n";
+        }
+        break;
+    }
+}
+----------------------------
+deque<pair<int, int>> dq;
+int N;
+
+cin >> N;
+int num;
+for (int i = 0; i < N; i++)
+{
+    cin >> num;
+    dq.push_back(make_pair(num, i + 1));
+}
+while (!dq.empty())
+{
+    int cur = dq.front().first;
+    cout << dq.front().second << " ";
+    dq.pop_front();
+
+    if (dq.empty())
+        break;
+
+    if (cur > 0)
+    {
+        for (int i = 0; i < cur - 1; i++)
+        {
+            dq.push_back(dq.front());
+            dq.pop_front();
+        }
+    }
+    else
+    {
+        for (int i = 0; i < (-1) * cur; i++)
+        {
+            dq.push_front(dq.back());
+            dq.pop_back();
+        }
+    }
+}
+----------------------------
+#include <iostream>
+#include <queue>
+#include <stack>
+
+using namespace std;
+
+stack <int> st;
+queue <int> q;
+bool flag[100000];
+
+int main() {
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+
+    int n, m, input, x;
+    cin >> n;
+    for (int i = 0; i < n; i++)
+    {
+        cin >> flag[i];
+    }
+    for (int i = 0; i < n; i++)
+    {
+        cin >> input;
+        if (flag[i] == 0)
+        {
+            st.push(input);
+        }
+    }
+    while (!st.empty())
+    {
+        q.push(st.top());
+        st.pop();
+    }
+    cin >> m;
+    for (int i = 0; i < m; i++)
+    {
+        cin >> input;
+        q.push(input);
+    }
+    for (int i = 0; i < m; i++)
+    {
+        cout << q.front() << " ";
+        q.pop();
+    }
+}
+----------------------------
+*/
+#pragma endregion
 
 #pragma region 조합론
 /*
@@ -1928,4 +2653,5 @@ while (t--)
 }
 --------------------------------
 */
+#pragma endregion
 #pragma endregion
