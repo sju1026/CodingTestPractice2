@@ -1,47 +1,26 @@
 #include <iostream>
-#include <queue>
-#include <stack>
-
+#include <cmath>
+#define fastio ios::sync_with_stdio(0), cin.tie(0), cout.tie(0)
 using namespace std;
 
-stack <int> st;
-queue <int> q;
-bool flag[100000];
+void hanoi(int start, int mid, int end, int n) {
+    if (n == 1)
+        cout << start << " " << end << "\n";
+    else
+    {
+        hanoi(start, end, mid, n - 1);
+        cout << start << " " << end << "\n";
+        hanoi(mid, start, end, n - 1);
+    }
+}
 
 int main() {
-    ios_base::sync_with_stdio(false);
-    cin.tie(NULL);
-
-    int n, m, input, x;
+    int n;
     cin >> n;
-    for (int i = 0; i < n; i++)
-    {
-        cin >> flag[i];
-    }
-    for (int i = 0; i < n; i++)
-    {
-        cin >> input;
-        if (flag[i] == 0)
-        {
-            st.push(input);
-        }
-    }
-    while (!st.empty())
-    {
-        q.push(st.top());
-        st.pop();
-    }
-    cin >> m;
-    for (int i = 0; i < m; i++)
-    {
-        cin >> input;
-        q.push(input);
-    }
-    for (int i = 0; i < m; i++)
-    {
-        cout << q.front() << " ";
-        q.pop();
-    }
+    cout << (int)pow(2, n) - 1 << "\n";
+    hanoi(1, 2, 3, n);
+    
+    return 0;
 }
 
 // 문제별 순서대로
@@ -1058,6 +1037,69 @@ for (int i = 2; i <= N; i++) {
         cout << i << endl;
         N /= i;
     }
+}
+--------------------------------
+#include <iostream>
+#include <cmath>
+#define fastio ios::sync_with_stdio(0), cin.tie(0), cout.tie(0)
+using namespace std;
+
+void cantor(int n) {
+    int size = pow(3, n - 1);
+
+    if(n == 0) {
+        cout << "-";
+        return;
+    }
+
+    cantor(n - 1);
+    for (int i = 0; i < size; i++)
+    {
+        cout << " ";
+    }
+    cantor(n - 1);
+}
+
+int main() {
+    int n;
+
+    while (cin >> n)
+    {
+        cantor(n);
+        cout << "\n";
+    }
+
+    return 0;
+}
+--------------------------------
+#include <iostream>
+#define fastio ios::sync_with_stdio(0), cin.tie(0), cout.tie(0)
+using namespace std;
+
+void star(int i, int j, int n) {
+    if ((i / n) % 3 == 1 && (j / n) % 3 == 1) {
+        cout << ' ';
+    }
+    else
+    {
+        if (n / 3 == 0)
+            cout << "*";
+        else
+            star(i, j, n / 3);
+    }
+}
+
+int main() {
+    int n;
+    cin >> n;
+    for (int i = 0; i < n; i++)
+    {
+        for (int j = 0; j < n; j++)
+            star(i, j, n);
+        cout << '\n';
+    }
+
+    return 0;
 }
 --------------------------------
 */
@@ -2654,4 +2696,426 @@ while (t--)
 --------------------------------
 */
 #pragma endregion
+
+#pragma region Hard2
+/*
+int n;
+cin >> n;
+int* div = new int[n];
+
+for (int i = 0; i < n; i++)
+{
+    cin >> div[i];
+}
+
+sort(div, div + n);
+
+cout << div[0] * div[n - 1];
+--------------------------------
+#include <iostream>
+#include <set>
+
+using namespace std;
+
+
+int main() {
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+
+    int n, count = 0;
+    cin >> n;
+    set<string> m;
+    string str;
+
+    while (n--)
+    {
+        cin >> str;
+
+        if (str == "ENTER")
+        {
+            count += m.size();
+            m.clear();
+            continue;
+        }
+        m.insert(str);
+    }
+
+    count += m.size();
+
+    cout << count;
+}
+--------------------------------
+#include <iostream>
+#include <map>
+
+using namespace std;
+
+
+int main() {
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+
+    int n, count = 0;
+
+    cin >> n;
+    map<string, bool> m;
+    string str1, str2;
+
+    while (n--)
+    {
+        cin >> str1 >> str2;
+
+        if (str1 == "ChongChong")
+        {
+            m.insert({ str1, true });
+        }
+        else if (str2 == "ChongChong")
+        {
+            m.insert({ str2, true });
+        }
+
+        if (m[str1])
+            m[str2] = true;
+        if (m[str2])
+            m[str1] = true;
+    }
+    for (auto& val : m) {
+        if (val.second)
+            count++;
+    }
+    cout << count;
+}
+--------------------------------
+#include <iostream>
+#include <algorithm>
+#include <vector>
+#include <cmath>
+
+using namespace std;
+
+vector<int> arr;
+
+int main() {
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+
+    int n, tmp, range, middle = 0, most_val, mean = 0;
+    int most = -9999;
+    int number[8001] = {0,};
+    bool not_first = false;
+    cin >> n;
+
+    for (int i = 0; i < n; i++)
+    {
+        cin >> tmp;
+        arr.push_back(tmp);
+        mean += tmp;
+        number[tmp + 4000]++;
+    }
+    sort(arr.begin(), arr.end());
+    for (int i = 0; i < 8001; i++)
+    {
+        if (number[i] == 0)
+            continue;
+        if (number[i] == most)
+        {
+            if (not_first)
+            {
+                most_val = i - 4000;
+                not_first = false;
+            }
+        }
+        if (number[i] > most)
+        {
+            most = number[i];
+            most_val = i - 4000;
+            not_first = true;
+        }
+    }
+    middle = arr[arr.size() / 2];
+    mean = round((float)mean / n);
+    range = arr.back() - arr.front();
+    cout << mean << '\n' << middle << '\n' << most_val << '\n' << range;
+}
+--------------------------------
+#include <iostream>
+#include <algorithm>
+#include <unordered_map>
+#include <vector>
+
+using namespace std;
+
+void fast_io(void) {
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+}
+
+bool cmp(pair<string, int>& a, pair<string, int>& b)
+{
+    if (a.second == b.second)
+    {
+        if (a.first.length() == b.first.length())
+            return a.first < b.first;
+        return a.first.length() > b.first.length();
+    }
+    return a.second > b.second;
+}
+int n, m;
+unordered_map<string, int> v;
+
+int main() {
+    fast_io();
+    cin >> n >> m;
+    for (int i = 0; i < n; i++)
+    {
+        string str;
+        cin >> str;
+        if (str.length() >= m)
+            v[str]++;
+    }
+    vector<pair<string, int>> vec(v.begin(), v.end());
+    sort(vec.begin(), vec.end(), cmp);
+    for (auto p : vec)
+        cout << p.first << '\n';
+
+}
+*/
+
+#pragma endregion
+
+#pragma region 재귀함수
+/*
+#include <iostream>
+
+using namespace std;
+
+void fast_io(void) {
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+}
+
+long long int fac(int n) {
+    if (n <= 1) return 1;
+    return n * fac(n - 1);
+}
+
+int main() {
+    fast_io();
+
+    int n;
+    cin >> n;
+    cout << fac(n);
+
+}
+--------------------------------
+#include <iostream>
+
+using namespace std;
+
+void fast_io(void) {
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+}
+
+int fibo(int n) {
+    if (n == 0) return 0;
+    if (n == 1) return 1;
+    return fibo(n - 2) + fibo(n - 1);
+}
+
+int main() {
+    fast_io();
+
+    int n;
+    cin >> n;
+    cout << fibo(n);
+
+}
+--------------------------------
+#define _CRT_SECURE_NO_WARNINGS
+#include<stdio.h>
+#include<string.h>
+
+int cnt;
+
+int recursion(const char* s, int l, int r) {
+    cnt++;
+    if (l >= r) return 1;
+    else if (s[l] != s[r]) return 0;
+    else {
+        return recursion(s, l + 1, r - 1);
+    }
+}
+
+int isPalindrome(const char* s) {
+    return recursion(s, 0, strlen(s) - 1);
+}
+
+int main() {
+    int T, pal, i;
+    scanf("%d", &T);
+    char S[1001];
+    for (i = 0; i < T; i++) {
+        cnt = 0;
+        scanf("%s", &S);
+        pal = isPalindrome(S);
+        printf("%d %d\n", pal, cnt);
+    }
+    return 0;
+}
+--------------------------------
+#include <iostream>
+#define fastio ios::sync_with_stdio(0), cin.tie(0), cout.tie(0)
+using namespace std;
+
+int* A;
+int* tmp;
+int N, cnt = 0, K = 0, result = -1;
+
+void merge(int A[], int p, int q, int r) {
+    int i = p, j = q + 1, t = 1;
+
+    while (i <= q && j <= r)
+    {
+        if (A[i] <= A[j])
+            tmp[t++] = A[i++];
+        else
+            tmp[t++] = A[j++];
+    }
+    while (i <= q)
+        tmp[t++] = A[i++];
+
+    while (j <= r)
+        tmp[t++] = A[j++];
+
+    i = p, t = 1;
+    while (i <= r)
+    {
+        A[i++] = tmp[t++];
+        cnt++;
+        if (cnt == K)
+        {
+            result = A[i - 1];
+            break;
+        }
+    }
+}
+
+void merge_sort(int A[], int p, int r) {
+    if (p < r)
+    {
+        int q = (p + r) / 2;
+        merge_sort(A, p, q);
+        merge_sort(A, q + 1, r);
+        merge(A, p, q, r);
+    }
+}
+
+int main() {
+    cin >> N >> K;
+    A = new int[N + 1];
+    tmp = new int[N + 1];
+    for (int i = 0; i < N; i++)
+    {
+        cin >> A[i];
+    }
+    merge_sort(A, 0, N - 1);
+    cout << result;
+    delete[] A;
+    delete[] tmp;
+    return 0;
+}
+--------------------------------
+#include <iostream>
+#include <cmath>
+#define fastio ios::sync_with_stdio(0), cin.tie(0), cout.tie(0)
+using namespace std;
+
+void cantor(int n) {
+    int size = pow(3, n - 1);
+
+    if(n == 0) {
+        cout << "-";
+        return;
+    }
+
+    cantor(n - 1);
+    for (int i = 0; i < size; i++)
+    {
+        cout << " ";
+    }
+    cantor(n - 1);
+}
+
+int main() {
+    int n;
+
+    while (cin >> n)
+    {
+        cantor(n);
+        cout << "\n";
+    }
+
+    return 0;
+}
+--------------------------------
+#include <iostream>
+#define fastio ios::sync_with_stdio(0), cin.tie(0), cout.tie(0)
+using namespace std;
+
+void star(int i, int j, int n) {
+    if ((i / n) % 3 == 1 && (j / n) % 3 == 1) {
+        cout << ' ';
+    }
+    else
+    {
+        if (n / 3 == 0)
+            cout << "*";
+        else
+            star(i, j, n / 3);
+    }
+}
+
+int main() {
+    int n;
+    cin >> n;
+    for (int i = 0; i < n; i++)
+    {
+        for (int j = 0; j < n; j++)
+            star(i, j, n);
+        cout << '\n';
+    }
+
+    return 0;
+}
+--------------------------------
+#include <iostream>
+#include <cmath>
+#define fastio ios::sync_with_stdio(0), cin.tie(0), cout.tie(0)
+using namespace std;
+
+void hanoi(int start, int mid, int end, int n) {
+    if (n == 1)
+        cout << start << " " << end << "\n";
+    else
+    {
+        hanoi(start, end, mid, n - 1);
+        cout << start << " " << end << "\n";
+        hanoi(mid, start, end, n - 1);
+    }
+}
+
+int main() {
+    int n;
+    cin >> n;
+    cout << (int)pow(2, n) - 1 << "\n";
+    hanoi(1, 2, 3, n);
+
+    return 0;
+}
+--------------------------------
+*/
+#pragma endregion
+
+
 #pragma endregion
