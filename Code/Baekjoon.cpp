@@ -1,25 +1,9 @@
 #include <iostream>
-#include <cmath>
 #define fastio ios::sync_with_stdio(0), cin.tie(0), cout.tie(0)
 using namespace std;
 
-void hanoi(int start, int mid, int end, int n) {
-    if (n == 1)
-        cout << start << " " << end << "\n";
-    else
-    {
-        hanoi(start, end, mid, n - 1);
-        cout << start << " " << end << "\n";
-        hanoi(mid, start, end, n - 1);
-    }
-}
-
 int main() {
-    int n;
-    cin >> n;
-    cout << (int)pow(2, n) - 1 << "\n";
-    hanoi(1, 2, 3, n);
-    
+
     return 0;
 }
 
@@ -3117,5 +3101,821 @@ int main() {
 */
 #pragma endregion
 
+#pragma region BackTracking
+/*
+int n, m;
+int arr[9] = { 0, };
+bool visited[9] = { 0, };
+
+void dfs(int c) {
+    if (c == m)
+    {
+        for (int i = 0; i < m; i++)
+            cout << arr[i] << ' ';
+        cout << "\n";
+        return;
+    }
+    for (int i = 1; i < n + 1; i++)
+    {
+        if (!visited[i])
+        {
+            visited[i] = true;
+            arr[c] = i;
+            dfs(c + 1);
+            visited[i] = false;
+        }
+    }
+}
+
+int main() {
+    cin >> n >> m;
+    dfs(0);
+
+    return 0;
+}
+-----------------------------------
+int n, m;
+int arr[9] = { 0, };
+bool visited[9] = { 0, };
+
+void dfs(int num, int cnt) {
+    if (cnt == m)
+    {
+        for (int i = 0; i < m; i++)
+            cout << arr[i] << ' ';
+        cout << "\n";
+        return;
+    }
+    for (int i = num; i < n + 1; i++)
+    {
+        if (!visited[i])
+        {
+            visited[i] = true;
+            arr[cnt] = i;
+            dfs(i + 1, cnt + 1);
+            visited[i] = false;
+        }
+    }
+}
+
+int main() {
+    cin >> n >> m;
+    dfs(1, 0);
+
+    return 0;
+}
+-----------------------------------
+int n, m;
+int arr[9] = { 0, };
+bool visited[9] = { 0, };
+
+void dfs(int cnt) {
+    if (cnt == m)
+    {
+        for (int i = 0; i < m; i++)
+            cout << arr[i] << ' ';
+        cout << "\n";
+        return;
+    }
+    for (int i = 1; i < n + 1; i++)
+    {
+        visited[i] = true;
+        arr[cnt] = i;
+        dfs(cnt + 1);
+        visited[i] = false;
+    }
+}
+
+int main() {
+    cin >> n >> m;
+    dfs(0);
+
+    return 0;
+}
+-----------------------------------
+int n, m;
+int arr[9] = { 0, };
+bool visited[9] = { 0, };
+
+void dfs(int num, int cnt) {
+    if (cnt == m)
+    {
+        for (int i = 0; i < m; i++)
+            cout << arr[i] << ' ';
+        cout << '\n';
+        return;
+    }
+    for (int i = num; i <= n; i++)
+    {
+        visited[i] = true;
+        arr[cnt] = i;
+        dfs(i, cnt + 1);
+        visited[i] = false;
+    }
+}
+
+int main() {
+    cin >> n >> m;
+    dfs(1, 0);
+
+    return 0;
+}
+-----------------------------------
+#define MAX 15
+
+using namespace std;
+
+int col[MAX];
+int N, total = 0;
+
+bool Check(int level) {
+    for (int i = 0; i < level; i++)
+    {
+        if (col[i] == col[level] || abs(col[level] - col[i]) == level - i)
+            return false;
+    }
+
+    return true;
+}
+
+void nqueen(int x) {
+    if (x == N)
+        total++;
+    else {
+        for (int i = 0; i < N; i++)
+        {
+            col[x] = i;
+            if (Check(x))
+                nqueen(x + 1);
+        }
+    }
+}
+
+int main() {
+    cin >> N;
+    nqueen(0);
+
+    cout << total;
+
+    return 0;
+}
+-----------------------------------
+// 2580번은 다시 보고 이해한 후 풀기
+-----------------------------------
+int n;
+int operands[11];
+int operators[4];
+int mymin = 10000000001;
+int mymax = -10000000001;
+
+void GetAnswer(int result, int idx) {
+    if (idx == n)
+    {
+        if (result > mymax)
+            mymax = result;
+        if (result < mymin)
+            mymin = result;
+        return;
+    }
+    for (int i = 0; i < 4; i++)
+    {
+        if (operators[i] > 0)
+        {
+            operators[i]--;
+            if (i == 0)
+                GetAnswer(result + operands[idx], idx + 1);
+            else if (i == 1)
+                GetAnswer(result - operands[idx], idx + 1);
+            else if (i == 2)
+                GetAnswer(result * operands[idx], idx + 1);
+            else
+                GetAnswer(result / operands[idx], idx + 1);
+            operators[i]++;
+        }
+    }
+    return;
+}
+
+int main() {
+    cin >> n;
+    for (int i = 0; i < n; i++)
+    {
+        cin >> operands[i];
+    }
+    for (int i = 0; i < 4; i++)
+    {
+        cin >> operators[i];
+    }
+    GetAnswer(operands[0], 1);
+    cout << mymax << '\n';
+    cout << mymin;
+
+    return 0;
+}
+-----------------------------------
+#include <iostream>
+#include <vector>
+#include <cmath>
+#define fastio ios::sync_with_stdio(0), cin.tie(0), cout.tie(0)
+
+using namespace std;
+
+bool team[20] = {};
+int score[20][20] = {};
+int n, mymin = 99999999;
+
+void TeamSet(int idx, int cnt) {
+    vector<int> start;
+    vector<int> link;
+    int start_score = 0;
+    int link_score = 0;
+    if (cnt == (n / 2)) {
+        for (int i = 0; i < n; i++)
+        {
+            if (team[i] == true)
+                start.push_back(i);
+            else
+                link.push_back(i);
+        }
+        for (int i = 0; i < (n/2); i++)
+            for (int j = 0; j < (n/2); j++)
+            {
+                start_score += score[start[i]][start[j]];
+                link_score += score[link[i]][link[j]];
+            }
+        if (abs(start_score - link_score) < mymin)
+            mymin = abs(start_score - link_score);
+        return;
+    }
+    for (int i = idx; i < n; i++)
+    {
+        if (team[i])
+            continue;
+        else
+        {
+            team[i] = true;
+            TeamSet(i, cnt + 1);
+            team[i] = false;
+        }
+    }
+}
+
+int main() {
+    cin >> n;
+    for (int i = 0; i < n; i++)
+        for (int j = 0; j < n; j++)
+            cin >> score[i][j];
+    TeamSet(0, 0);
+    cout << mymin;
+
+    return 0;
+}
+-----------------------------------
+
+*/
+#pragma endregion
+
+#pragma region 동적 계획법 1단계
+/*
+int arr[41] = { 0 };
+int n, cnt1 = 0, cnt2 = 0;
+
+int fib(int n) {
+    if (n == 1 || n == 2)
+    {
+        cnt1++;
+        return 1;
+    }
+    else return (fib(n - 1) + fib(n - 2));
+}
+
+int main() {
+
+    cin >> n;
+    fib(n);
+    arr[1] = arr[2] == 1;
+    for (int i = 3; i <= n; i++)
+    {
+        arr[i] = arr[i - 1] + arr[i - 2];
+        cnt2++;
+    }
+    cout << cnt1 << ' ' << cnt2;
+
+    return 0;
+}
+--------------------------------
+int store[21][21][21];
+
+int solve(int a, int b, int c) {
+    if (a <= 0 || b <= 0 || c <= 0)
+        return 1;
+
+    if (a > 20 || b > 20 || c > 20)
+        return solve(20, 20, 20);
+
+    if (store[a][b][c])
+        return store[a][b][c];
+
+    if (a < b && b < c)
+    {
+        store[a][b][c] = solve(a, b, c - 1) + solve(a, b - 1, c - 1) - solve(a, b - 1, c);
+        return store[a][b][c];
+    }
+
+    store[a][b][c] = solve(a - 1, b, c) + solve(a - 1, b - 1, c) + solve(a - 1, b, c - 1) - solve(a - 1, b - 1, c - 1);
+    return store[a][b][c];
+}
+
+int main() {
+    int a, b, c;
+    while (true)
+    {
+        std::cin >> a >> b >> c;
+
+        if (a == -1 && b == -1 && c == -1)
+            break;
+
+        std::cout << "w(" << a << ", " << b << ", " << c << ") = " << solve(a, b, c) << '\n';
+    }
+
+    return 0;
+}
+--------------------------------
+#include <vector>
+
+int n;
+vector<long long> answer = { 0, 1, 2 };
+
+void FindAnswer() {
+    long long tmp;
+    for (int i = 3; i < n + 1; i++)
+    {
+        tmp = 0;
+        tmp = answer[i - 1] + answer[i - 2];
+        answer.push_back(tmp % 15746);
+    }
+}
+
+int main() {
+    cin >> n;
+    FindAnswer();
+    cout << answer[n] % 15746;
+
+    return 0;
+}
+--------------------------------
+long long parray[101] = { 0,1,1, };
+long long p(int n) {
+    if (n < 3)
+        return parray[n];
+    else if (parray[n] == 0)
+        parray[n] = p(n - 2) + p(n - 3);
+    return parray[n];
+}
+
+
+int main() {
+
+    int t;
+    int num;
+    cin >> t;
+    for (int i = 0; i < t; i++)
+    {
+        cin >> num;
+        cout << p(num) << '\n';
+    }
+
+    return 0;
+}
+--------------------------------
+#define MAX 100001
+
+int series[MAX], dp[MAX] = { 0, };
+
+int main() {
+    int n, i;
+    cin >> n;
+    for (int i = 0; i < n; i++)
+    {
+        cin >> series[i];
+        dp[i] = series[i];
+    }
+
+    int maxSum = dp[0];
+    for (int i = 1; i < n; i++)
+    {
+        dp[i] = max(dp[i], dp[i - 1] + series[i]);
+        if (dp[i] > maxSum)
+        {
+            maxSum = dp[i];
+        }
+    }
+
+    cout << maxSum << endl;
+
+    return 0;
+}
+--------------------------------
+#include <algorithm>
+
+int house[1001][3];
+
+int main() {
+
+    int n;
+    int cost[3];
+
+    house[0][0] = 0;
+    house[0][1] = 0;
+    house[0][2] = 0;
+    cin >> n;;
+    for (int i = 1; i < n + 1; i++)
+    {
+        cin >> cost[0] >> cost[1] >> cost[2];
+        house[i][0] = min(house[i - 1][1], house[i - 1][2]) + cost[0];
+        house[i][1] = min(house[i - 1][0], house[i - 1][2]) + cost[1];
+        house[i][2] = min(house[i - 1][1], house[i - 1][0]) + cost[2];
+    }
+
+    cout << min(house[n][2], min(house[n][0], house[n][1]));
+
+    return 0;
+}
+--------------------------------
+#include <algorithm>
+
+int dp[500][500] = { 0, };
+
+int main() {
+
+    int n, maxNumber = 0;
+    cin >> n;
+    for (int i = 0; i < n; i++)
+        for (int j = 0; j < i + 1; j++)
+            cin >> dp[i][j];
+
+    for (int i = 0; i < n; i++)
+        for (int j = 0; j < i + 1; j++)
+        {
+            if (j == 0)
+                dp[i][j] = dp[i - 1][0] + dp[i][j];
+            else if (i == j)
+                dp[i][j] = dp[i - 1][j - 1] + dp[i][j];
+            else
+                dp[i][j] = max(dp[i - 1][j - 1] + dp[i][j], dp[i - 1][j] + dp[i][j]);
+
+            maxNumber = max(maxNumber, dp[i][j]);
+        }
+
+    cout << maxNumber;
+
+    return 0;
+}
+--------------------------------
+#define MAX 301
+
+int n;
+int stairs[MAX];
+int dp[MAX];
+
+int main() {
+
+    cin >> n;
+    for (auto i = 0; i < n; i++)
+        cin >> stairs[i];
+
+    dp[0] = stairs[0];
+    dp[1] = max(stairs[1], stairs[0] + stairs[1]);
+    dp[2] = max(stairs[0] + stairs[2], stairs[1] + stairs[2]);
+
+    for (int i = 3; i < n; i++)
+    {
+        dp[i] = max(stairs[i] + dp[i - 2], stairs[i] + stairs[i - 1] + dp[i - 3]);
+    }
+
+    cout << dp[n - 1];
+
+    return 0;
+}
+--------------------------------
+#include <vector>
+#include <algorithm>
+
+int main() {
+
+    int n;
+    cin >> n;
+    vector<int> dp(n + 1);
+    dp[1] = 0;
+    for (int i = 2; i < n + 1; i++)
+    {
+        dp[i] = dp[i - 1] + 1;
+        if (!(i % 3))
+            dp[i] = min(dp[i], dp[i / 3] + 1);
+        if(!(i%2))
+            dp[i] = min(dp[i], dp[i / 2] + 1);
+    }
+
+    cout << dp[n] << "\n";
+
+    return 0;
+}
+--------------------------------
+#define mod 10000000
+
+int dp[101][10] = { 0, };
+
+int main() {
+    int n;
+    cin >> n;
+
+    for (int i = 1; i < 10; i++)
+    {
+        dp[1][i] = 1;
+    }
+    for (int i = 2; i < n + 1; i++)
+    {
+        for (int j = 0; j < 10; j++)
+        {
+            if (j == 0)
+                dp[i][0] = dp[i - 1][j + 1];
+            else if (j == 9)
+                dp[i][9] = dp[i - 1][j - 1];
+            else
+                dp[i][j] = dp[i - 1][j - 1] + dp[i - 1][j + 1];
+
+            dp[i][j] %= mod;
+        }
+    }
+    int result = 0;
+    for (int i = 0; i < 10; i++)
+    {
+        result = (result + dp[n][i]) % mod;
+    }
+
+    cout << result << "\n";
+
+
+    return 0;
+}
+--------------------------------
+#define mod 1000000000
+
+int dp[101][10] = { 0, };
+
+int main() {
+    int n;
+    cin >> n;
+
+    for (int i = 1; i < 10; i++)
+    {
+        dp[1][i] = 1;
+    }
+    for (int i = 2; i < n + 1; i++)
+    {
+        for (int j = 0; j < 10; j++)
+        {
+            if (j == 0)
+                dp[i][0] = dp[i - 1][j + 1];
+            else if (j == 9)
+                dp[i][9] = dp[i - 1][j - 1];
+            else
+                dp[i][j] = dp[i - 1][j - 1] + dp[i - 1][j + 1];
+
+            dp[i][j] %= mod;
+        }
+    }
+    int result = 0;
+    for (int i = 0; i < 10; i++)
+    {
+        result = (result + dp[n][i]) % mod;
+    }
+
+    cout << result << "\n";
+
+
+    return 0;
+}
+--------------------------------
+// 2156번
+#include <vector>
+
+vector<int> wine;
+vector<int> d;
+
+int Max(int a, int b) {
+    return a > b ? a : b;
+}
+
+int dynamic() {
+    for (int i = 3; i < wine.size(); i++)
+    {
+        d.push_back(Max(Max(d[i - 3] + wine[i - 1] + wine[i], d[i - 2] + wine[i]), d[i - 1]));
+    }
+    return d[wine.size() - 1];
+}
+
+int main() {
+
+    int n;
+    cin >> n;
+
+    for (int i = 0; i < 3; i++)
+    {
+        wine.push_back(0);
+        d.push_back(0);
+    }
+
+    int k;
+    for (int i = 0; i < n; i++)
+    {
+        cin >> k;
+        wine.push_back(k);
+    }
+
+    cout << dynamic() << "\n";
+
+    return 0;
+}
+--------------------------------
+// 11053번
+#include <algorithm>
+
+int main() {
+
+    int n;
+    cin >> n;
+
+    int arr[1001];
+    for (int i = 1; i < n + 1; i++)
+    {
+        cin >> arr[i];
+    }
+
+    int dp[1001];
+
+    for (int i = 1; i <= n; i++)
+        dp[i] = 1;
+
+    for (int i = 1; i < n + 1; i++)
+    {
+        for (int j = 1; j < i; j++)
+        {
+            if (arr[i] > arr[j])
+                dp[i] = max(dp[i], dp[j] + 1);
+        }
+    }
+
+    sort(dp, dp + n + 1);
+    cout << dp[n];
+
+    return 0;
+}
+--------------------------------
+// 1253번
+#include <algorithm>
+
+const int MAX = 1001;
+
+int n;
+
+int arr[MAX];
+int dp[2][MAX];
+
+int main() {
+    cin >> n;
+
+    fill(dp[0], dp[0] + MAX, 1);
+    fill(dp[1], dp[1] + MAX, 1);
+
+    for (int i = 1; i < n + 1; i++)
+    {
+        cin >> arr[i];
+    }
+
+    for (int i = 1; i < n + 1; i++)
+    {
+        for (int j = 1; j < i; j++)
+        {
+            if (arr[j] < arr[i])
+                dp[0][i] = max(dp[0][i], dp[0][j] + 1);
+        }
+    }
+
+    for (int i = n; i >= 1; i--)
+    {
+        for (int j = n; j > i; j--)
+        {
+            if (arr[j] < arr[i])
+                dp[1][i] = max(dp[1][i], dp[1][j] + 1);
+        }
+    }
+
+    int ans = 0;
+    for (int k = 0; k < n + 1; k++)
+    {
+        ans = max(ans, dp[0][k] + dp[1][k]);
+    }
+
+    cout << ans - 1;
+
+    return 0;
+}
+--------------------------------
+// 2565
+#include <algorithm>
+#include <vector>
+
+int n, res = 0;
+vector<pair<int, int>> v;
+int dp[100];
+
+void solution() {
+    sort(v.begin(), v.end());
+
+    for (int i = 0; i < n; i++)
+    {
+        dp[i] = 1;
+        for (int j = 0; j < i; j++)
+        {
+            if (v[j].second < v[i].second)
+                dp[i] = max(dp[i], dp[j] + 1);
+        }
+        res = max(res, dp[i]);
+    }
+    cout << n - res;
+}
+
+int main() {
+
+    cin >> n;
+    for (int i = 0; i < n; i++)
+    {
+        int a, b;
+        cin >> a >> b;
+        v.push_back({ a,b });
+    }
+    solution();
+
+    return 0;
+}
+--------------------------------
+// 9251
+#include <algorithm>
+#include <string>
+
+int dp[1001][1001];
+
+int main() {
+
+    string a, b;
+
+    cin >> a >> b;
+    for (int i = 1; i <= a.length(); i++) {
+        for (int j = 1; j <= b.length(); j++) {
+            if (a[i - 1] == b[j - 1]) {
+                dp[i][j] = dp[i - 1][j - 1] + 1;
+            }
+            else {
+                dp[i][j] = max(dp[i - 1][j], dp[i][j - 1]);
+            }
+
+        }
+    }
+
+    cout << dp[a.length()][b.length()];
+
+    return 0;
+}
+--------------------------------
+// 12865
+#include <algorithm>
+
+int n, k;
+int dp[101][100001];
+int w[101];
+int v[101];
+
+int main() {
+
+    cin >> n >> k;
+
+    for (int i = 1; i <= n; i++)
+        cin >> w[i] >> v[i];
+
+    for(int i = 1; i <= n; i++)
+        for (int j = 1; j <= k; j++)
+        {
+            if (j - w[i] >= 0)
+                dp[i][j] = max(dp[i - 1][j], dp[i - 1][j - w[i]] + v[i]);
+            else
+                dp[i][j] = dp[i - 1][j];
+        }
+
+    cout << dp[n][k];
+    return 0;
+}
+*/
+#pragma endregion
 
 #pragma endregion
