@@ -1,8 +1,10 @@
 #include <iostream>
-#define fastio ios::sync_with_stdio(0), cin.tie(0), cout.tie(0)
 using namespace std;
 
 int main() {
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
+    cout.tie(0);
 
     return 0;
 }
@@ -3917,5 +3919,353 @@ int main() {
 }
 */
 #pragma endregion
+
+#pragma region 누적 합
+/*
+// 11659
+int n, m;
+int arr[100001];
+
+int main() {
+
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
+
+    cin >> n >> m;
+
+    for (int i = 0; i < n; i++)
+        cin >> arr[i];
+
+    for (int i = 0; i <= n; i++)
+        arr[i] += arr[i - 1];
+
+    for (int i = 0; i < m; i++) {
+        int x, y;
+        cin >> x >> y;
+
+        cout << arr[y - 1] - arr[x - 2] << "\n";
+    }
+
+    return 0;
+}
+----------------------------------------
+// 2559
+int n, k, temp, sum[100001], ret = -9999999;
+
+int main() {
+
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
+
+    cin >> n >> k;
+
+    for (int i = 1; i < n + 1; i++)
+    {
+        cin >> temp;
+        sum[i] = sum[i - 1] + temp;
+    }
+
+    for (int i = k; i < n + 1; i++)
+    {
+        ret = max(ret, (sum[i] - sum[i - k]));
+    }
+
+    cout << ret;
+    return 0;
+}
+----------------------------------------
+// 10986
+#include <vector>
+
+int main() {
+
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
+    cout.tie(NULL);
+
+    int n, m, temp;
+    vector<long long> v(1001, 0);
+    long long sum = 0, answer = 0;
+
+    cin >> n >> m;
+    for (int i = 0; i < n; i++)
+    {
+        cin >> temp;
+        sum += temp;
+        v[sum % m]++;
+        if (sum % m == 0)
+            answer++;
+    }
+
+    for (int i = 0; i < m + 1; i++)
+        answer += v[i] * (v[i] - 1) / 2;
+
+    cout << answer;
+
+    return 0;
+}
+----------------------------------------
+// 11660
+int arr[1025][1025], dp[1025][1025];
+
+int main() {
+
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
+    cout.tie(NULL);
+
+    int n, m;
+    cin >> n >> m;
+    for (int i = 1; i <= n; i++)
+    {
+        for (int j = 1; j <= n; j++)
+        {
+            cin >> arr[i][j];
+            dp[i][j] = dp[i - 1][j] + dp[i][j - 1] - dp[i - 1][j - 1] + arr[i][j];
+        }
+    }
+    int x1, y1, x2, y2;
+    int ans;
+
+    for (int i = 0; i < m; i++)
+    {
+        cin >> x1 >> y1;
+        cin >> x2 >> y2;
+        ans = dp[x2][y2] - dp[x1 - 1][y2] - dp[x2][y1 - 1] + dp[x1 - 1][y1 - 1];
+        cout << ans << '\n';
+    }
+
+    return 0;
+}
+----------------------------------------
+// 25682
+#include <algorithm>
+
+int B[2001][2001]{};
+int W[2001][2001]{};
+
+int main() {
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
+    cout.tie(0);
+
+    int n, m, k;
+    cin >> n >> m >> k;
+
+    for (int i = 1; i <= n; ++i) {
+        for (int j = 1; j <= m; ++j) {
+            char c;
+            cin >> c;
+            B[i][j] = B[i][j - 1] + B[i - 1][j] - B[i - 1][j - 1];
+            W[i][j] = W[i][j - 1] + W[i - 1][j] - W[i - 1][j - 1];
+            if ((i + j) % 2 == 0) {
+                if (c == 'W') B[i][j]++;
+                else W[i][j]++;
+            }
+            else {
+                if (c == 'B') B[i][j]++;
+                else W[i][j]++;
+            }
+        }
+    }
+
+    int cnt = k * k;
+    for (int i = k; i <= n; ++i) {
+        for (int j = k; j <= m; ++j) {
+            int tmpW = W[i][j] - W[i - k][j] - W[i][j - k] + W[i - k][j - k];
+            int tmpB = B[i][j] - B[i - k][j] - B[i][j - k] + B[i - k][j - k];
+            cnt = min(min(tmpW, tmpB), cnt);
+        }
+    }
+
+    cout << cnt;
+}
+----------------------------------------
+
+*/
+#pragma endregion
+
+#pragma region 그리디 알고리즘
+/*
+// 11047
+#include <algorithm>
+#include <vector>
+
+int cmp(int a, int b) {
+    return a > b;
+}
+
+int main() {
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
+    cout.tie(0);
+
+    int n, k, ans = 0;
+
+    cin >> n >> k;
+    vector<int> v(n);
+
+    for (int i = 0; i < n; i++)
+        cin >> v[i];
+
+    sort(v.begin(), v.end(), cmp);
+    for (int i = 0; i < n; i++)
+    {
+        while (k - v[i] >= 0) {
+            ans++;
+            k -= v[i];
+        }
+    }
+    cout << ans << '\n';
+}
+--------------------------------
+// 1931
+#include <algorithm>
+#include <vector>
+
+
+
+int main() {
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
+    cout.tie(0);
+
+    int N, end, begin;
+
+    vector<pair<int, int>> v;
+
+    cin >> N;
+
+    for (int i = 0; i < N; i++)
+    {
+        cin >> begin >> end;
+        v.push_back(make_pair(end, begin));
+    }
+
+    sort(v.begin(), v.end());
+
+    int time = v[0].first;
+    int count = 1;
+    for (int i = 1; i < N; i++)
+    {
+        if (time <= v[i].second)
+        {
+            count++;
+            time = v[i].first;
+        }
+    }
+
+    cout << count;
+
+    return 0;
+}
+--------------------------------
+// 11399
+#include <algorithm>
+
+int arr[1001];
+
+int main() {
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
+    cout.tie(0);
+
+    int n, ans = 0;
+
+    cin >> n;
+
+    for (int i = 0; i < n; i++)
+        cin >> arr[i];
+
+    sort(arr, arr + n);
+
+    for (int i = 0; i < n; i++)
+        ans += arr[i] * (n - i);
+
+    cout << ans;
+
+    return 0;
+}
+--------------------------------
+// 1541
+#include <string>
+
+string input;
+cin >> input;
+
+int result = 0;
+string num;
+bool isMinus = false;
+
+for (int i = 0; i < input.size() + 1; i++)
+{
+    if (input[i] == '-' || input[i] == '+' || i == input.size())
+    {
+        if (isMinus)
+        {
+            result -= stoi(num);
+            num = "";
+        }
+        else
+        {
+            result += stoi(num);
+            num = "";
+        }
+    }
+    else
+        num += input[i];
+
+    if (input[i] == '-')
+        isMinus = true;
+}
+
+cout << result;
+
+return 0;
+--------------------------------
+// 13305
+#include <algorithm>
+#include <queue>
+
+int dist[100001];
+int cost[100001];
+
+int main() {
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
+    cout.tie(0);
+
+    int n;
+    long long total = 0, c_now;
+
+    cin >> n;
+
+    for (int i = 1; i < n; i++)
+        cin >> dist[i];
+
+    for (int i = 0; i < n; i++)
+        cin >> cost[i];
+
+    c_now = cost[0];
+    total = c_now * dist[1];
+
+    for (int i = 1; i < n; i++)
+    {
+        if (c_now < cost[i])
+            total += c_now * dist[i + 1];
+        else
+        {
+            c_now = cost[i];
+            total += c_now * dist[i + 1];
+        }
+    }
+    cout << total << '\n';
+
+    return 0;
+}
+--------------------------------
+*/
+#pragma endregion
+
 
 #pragma endregion
