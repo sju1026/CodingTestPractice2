@@ -1,7 +1,8 @@
-#include<iostream>
+#include <iostream>
 using namespace std;
 
-int main(void) {
+
+int main() {
     ios::sync_with_stdio(false);
     cin.tie(NULL);
     cout.tie(NULL);
@@ -1526,6 +1527,46 @@ int main(void) {
 ------------------------------
 */
 
+/* // 
+
+------------------------------
+*/
+
+/* //
+
+------------------------------
+*/
+
+/* //
+
+------------------------------
+*/
+
+/* //
+
+------------------------------
+*/
+
+/* //
+
+------------------------------
+*/
+
+/* //
+
+------------------------------
+*/
+
+/* //
+
+------------------------------
+*/
+
+/* //
+
+------------------------------
+*/
+
 /* //
 
 ------------------------------
@@ -1537,4 +1578,930 @@ int main(void) {
 */
 #pragma endregion
 
+#pragma endregion
+
+#pragma region 문제 모음 2
+/* // 11725 트리의 부모 찾기
+#include <vector>
+
+#define MAX 100001
+
+int n;
+int arr[MAX];
+bool visited[MAX];
+vector<int> v[MAX];
+
+void dfs(int k) {
+    visited[k] = true;
+    for (int i = 0; i < v[k].size(); i++)
+    {
+        int next = v[k][i];
+        if (!visited[next])
+        {
+            arr[next] = k;
+            dfs(next);
+        }
+    }
+}
+
+int main(void) {
+    ios::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
+
+    cin >> n;
+    for (int i = 1; i < n; i++)
+    {
+        int x, y;
+        cin >> x >> y;
+        v[x].push_back(y);
+        v[y].push_back(x);
+    }
+
+    dfs(1);
+
+    for (int i = 2; i <= n; i++)
+        cout << arr[i] << '\n';
+
+    return 0;
+}
+------------------------------
+*/
+
+/* // 1167 트리의 지름
+#include <vector>
+#include <algorithm>
+#include <queue>
+
+int V, u, v, c;
+int node, ans;
+bool visit[100001];
+vector<pair<int, int>> graph[100001];
+
+void DFS(int x, int dist) {
+    visit[x] = true;
+
+    if (dist > ans)
+    {
+        ans = dist;
+        node = x;
+    }
+
+    for (int i = 0; i < graph[x].size(); i++)
+    {
+        int next_node = graph[x][i].first;
+        int next_dist = graph[x][i].second + dist;
+        if (!visit[next_node])
+        {
+            visit[next_node] = true;
+            DFS(next_node, next_dist);
+            visit[next_node] = false;
+        }
+    }
+}
+
+int main(void) {
+    ios::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
+
+    cin >> V;
+
+    for (int i = 1; i <= V; i++) {
+        cin >> u;
+        while (true)
+        {
+            cin >> v;
+            if (v == -1) break;
+            cin >> c;
+            graph[u].push_back({ v, c });
+        }
+    }
+
+    DFS(1, 0);
+    ans = 0;
+    for (int i = 1; i <= V; i++)
+        visit[i] = false;
+    DFS(node, 0);
+    cout << ans << '\n';
+
+    return 0;
+}
+------------------------------
+*/
+
+/* // 1991 트리 순회 => 필수암기
+int a[50][2];
+
+void preorder(int n) {
+    if (n == -1) return;
+    cout << (char)(n + 'A');
+    preorder(a[n][0]);
+    preorder(a[n][1]);
+}
+
+void inorder(int n) {
+    if (n == -1) return;
+    inorder(a[n][0]);
+    cout << (char)(n + 'A');
+    inorder(a[n][1]);
+}
+
+void postorder(int n) {
+    if (n == -1) return;
+    postorder(a[n][0]);
+    postorder(a[n][1]);
+    cout << (char)(n + 'A');
+}
+
+int main(void) {
+    ios::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
+
+    int n;
+    cin >> n;
+    for (int i = 0; i < n; i++)
+    {
+        char x, y, z;
+        cin >> x >> y >> z;
+        x = x - 'A';
+        if (y == '.')
+            a[x][0] = -1;
+        else
+            a[x][0] = y - 'A';
+        if (z == '.')
+            a[x][1] = -1;
+        else
+            a[x][1] = z - 'A';
+    }
+    preorder(0);
+    cout << '\n';
+    inorder(0);
+    cout << '\n';
+    postorder(0);
+
+    return 0;
+}
+------------------------------
+*/
+
+/* // 5639 이진 검색 트리
+#include <vector>
+#include <algorithm>
+
+int n;
+vector<int> v;
+
+void go(int start, int end) {
+    if (start >= end) return;
+    if (start == end - 1) {
+        cout << v[start] << '\n';
+        return;
+    }
+    int idx = start + 1;
+    while (idx < end)
+    {
+        if (v[start] < v[idx])
+            break;
+        idx++;
+    }
+    go(start + 1, idx);
+    go(idx, end);
+    cout << v[start] << '\n';
+    return;
+}
+
+int main(void) {
+    ios::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
+
+    while (cin >> n)
+    {
+        v.push_back(n);
+    }
+    go(0, v.size());
+
+    return 0;
+}
+------------------------------
+*/
+
+/* // 4803 트리
+#include <vector>
+#include <algorithm>
+
+int n, m, u, v;
+int ans, cnt;
+bool visit[501];
+vector<int> graph[501];
+
+bool DFS(int x, int post_x) {
+    visit[x] = true;
+
+    for (int i = 0; i < graph[x].size(); i++)
+    {
+        if (graph[x][i] == post_x) continue;
+        if (visit[graph[x][i]]) return false;
+        if (DFS(graph[x][i], x) == false) return false;
+    }
+    return true;
+}
+
+int main(void) {
+    ios::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
+
+    while (true)
+    {
+        cin >> n >> m;
+        if (n == 0 && m == 0) break;
+
+        cnt++;
+        ans = 0;
+        for (int i = 1; i < 501; i++)
+        {
+            graph[i].clear();
+            visit[i] = false;
+        }
+
+        for (int i = 0; i < m; i++)
+        {
+            cin >> u >> v;
+            graph[u].push_back(v);
+            graph[v].push_back(u);
+        }
+
+        for (int i = 1; i < n + 1; i++)
+        {
+            if (!visit[i])
+                if (DFS(i, 0)) ans++;
+        }
+
+        cout << "Case " << cnt << ": ";
+        if (ans > 1)
+            cout << "A forest of " << ans << " trees." << '\n';
+        else if (ans == 1)
+            cout << "There is one tree." << '\n';
+        else if (ans == 0)
+            cout << "No trees." << '\n';
+    }
+
+    return 0;
+}
+------------------------------
+*/
+
+/* // 9342 - 상근이의 여행
+#include <queue>
+#include <vector>
+
+vector<int> v[1001];
+bool check[1001];
+
+int main(void) {
+    ios::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
+
+    int test;
+    cin >> test;
+
+    for (int t = 0; t < test; t++)
+    {
+        int node, edge, a, b;
+        cin >> node >> edge;
+        for (int i = 1; i < node + 1; i++)
+        {
+            v[i].clear();
+            check[i] = false;
+        }
+        for (int i = 0; i < edge; i++)
+        {
+            cin >> a >> b;
+            v[a].push_back(b);
+            v[b].push_back(a);
+        }
+        int result = 0;
+        queue<int> q;
+        q.push(1);
+        check[1] = true;
+        while (!q.empty()) {
+            int cidx = q.front();
+            q.pop();
+            for (int i = 0; i < v[cidx].size(); i++)
+            {
+                int next = v[cidx][i];
+                if (!check[next]) {
+                    check[next] = true;
+                    result++;
+                    q.push(next);
+                }
+            }
+        }
+        cout << result << '\n';
+    }
+
+    return 0;
+}
+------------------------------
+*/
+
+/* // 4386 - 별자리 만들기
+#include <vector>
+#include <algorithm>
+#include <tuple>
+#include <cmath>
+
+int n, m;
+double u, v, x, y;
+int parent[101];
+double d, ans;
+vector<pair<double, double>> star;
+vector<tuple<double, int, int>> dist;
+
+int find(int u) {
+    if (parent[u] == u) return u;
+    else return parent[u] = find(parent[u]);
+}
+
+bool union_node(int u, int v) {
+    u = find(u);
+    v = find(v);
+
+    if (u == v)
+        return false;
+    else
+    {
+        parent[u] = v;
+        return true;
+    }
+}
+
+double Cal_dist(double x1, double y1, double x2, double y2) {
+    double x_dist = pow(x1 - x2, 2);
+    double y_dist = pow(y1 - y2, 2);
+
+    return sqrt(x_dist + y_dist);
+}
+
+
+int main(void) {
+    ios::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
+
+    cin >> n;
+    for (int i = 1; i <= n; i++)
+        parent[i] = i;
+
+    star.push_back({ 0, 0 });
+    for (int i = 1; i < n + 1; i++)
+    {
+        cin >> x >> y;
+        star.push_back({ x, y });
+    }
+
+    for (int i = 1; i <= n - 1; i++) {
+        for (int j = i + 1; j <= n; j++) {
+            double r = Cal_dist(star[i].first, star[i].second, star[j].first, star[j].second);
+            dist.push_back({ r, i , j });
+        }
+    }
+
+    sort(dist.begin(), dist.end());
+
+    for (int i = 0; i < dist.size(); i++) {
+        x = get<1>(dist[i]);
+        y = get<2>(dist[i]);
+        d = get<0>(dist[i]);
+        if (union_node(x, y))ans += d;
+    }
+
+    printf("%.2f", ans);
+
+    return 0;
+}
+------------------------------
+*/
+
+/* // 15681 - 트리와 쿼리
+#include <vector>
+
+vector<int> v[100001];
+bool visit[100001] = { false, };
+int num[100001];
+int node, query, s, e;
+
+int dfs(int n) {
+    if (num[n] != 0) return num[n];
+    visit[n] = true;
+    int ret = 1;
+    for (int i = 0; i < v[n].size(); i++)
+    {
+        int next = v[n][i];
+        if (visit[next]) continue;
+        ret += dfs(next);
+    }
+    num[n] = ret;
+    return ret;
+}
+
+int main(void) {
+    ios::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
+
+    int root;
+    cin >> node >> root >> query;
+    for (int i = 0; i < node - 1; i++)
+    {
+        cin >> s >> e;
+        v[s].push_back(e);
+        v[e].push_back(s);
+    }
+    num[root] = dfs(root);
+    for (int i = 0; i < query; i++) {
+        cin >> s;
+        cout << num[s] << '\n';
+    }
+
+    return 0;
+}
+------------------------------
+*/
+
+/* // 2213 - 트리의 독립집합
+#include <vector>
+#include <algorithm>
+#define MAX 100001
+
+int n, a, b, x, ans1, ans2;
+int v[MAX];
+int dp[MAX][2];
+bool visit[MAX];
+vector<int> graph[MAX];
+vector<int> ans;
+
+void DFS(int now) {
+    visit[now] = true;
+    dp[now][1] = v[now];
+
+    for (int child : graph[now]) {
+        if (!visit[child]) {
+            DFS(child);
+            dp[now][0] += max(dp[child][0], dp[child][1]);
+            dp[now][1] += dp[child][0];
+        }
+    }
+}
+
+void tracking(int prev, int now, int state) {
+    if (state == 1) {
+        ans.push_back(now);
+        for (int child : graph[now]) {
+            if (child == prev) continue;
+            tracking(now, child, 0);
+        }
+    }
+    else
+    {
+        for (int child : graph[now]) {
+            if (child == prev) continue;
+            if (dp[child][0] > dp[child][1])
+                tracking(now, child, 0);
+            else
+                tracking(now, child, 1);
+        }
+    }
+}
+
+int main(void) {
+    ios::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
+
+    cin >> n;
+    for (int i = 1; i <= n; i++)
+        cin >> v[i];
+    for (int i = 1; i <= n - 1; i++) {
+        cin >> a >> b;
+        graph[a].push_back(b);
+        graph[b].push_back(a);
+    }
+
+    DFS(1);
+
+    ans1 = dp[1][0];
+    ans2 = dp[1][1];
+
+    if (ans1 > ans2) tracking(-1, 1, 0);
+    else tracking(-1, 1, 1);
+
+    cout << max(ans1, ans2) << '\n';
+
+    sort(ans.begin(), ans.end());
+
+    for (int x : ans)
+        cout << x << ' ';
+
+    return 0;
+}
+------------------------------
+*/
+
+/* // 2533 - 사회망서비스 
+#include <vector>
+#define MAX 1000001
+
+int n, parent;
+vector<int> v[MAX];
+int dp[MAX][2];
+bool visit[MAX] = { false, };
+
+void find(int x) {
+    visit[x] = true;
+    dp[x][0] = 1;
+    for (int i = 0; i < v[x].size(); i++)
+    {
+        int child = v[x][i];
+        if (visit[child]) continue;
+        find(child);
+        dp[x][1] += dp[child][0];
+        dp[x][0] += min(dp[child][1], dp[child][0]);
+    }
+}
+
+int main(void) {
+    ios::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
+
+    cin >> n;
+    int u, e;
+    for (int i = 0; i < n - 1; i++)
+    {
+        cin >> u >> e;
+        v[u].push_back(e);
+        v[e].push_back(u);
+    }
+
+    find(1);
+    cout << min(dp[1][0], dp[1][1]);
+
+    return 0;
+}
+------------------------------
+*/
+
+/* // 1949 - 우수마을
+#include <vector>
+#include <algorithm>
+#define MAX 1000001
+
+int n, a, b;
+int citizen[MAX];
+int dp[MAX][2];
+bool visit[MAX];
+vector<int> v[MAX];
+
+void DFS(int c) {
+    visit[c] = true;
+
+    dp[c][0] = 0;
+    dp[c][1] = citizen[c];
+
+    for (int next : v[c]) {
+        if (!visit[next]) {
+            DFS(next);
+            dp[c][0] += max(dp[next][0], dp[next][1]);
+            dp[c][1] += dp[next][0];
+        }
+    }
+}
+
+int main(void) {
+    ios::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
+
+    cin >> n;
+
+    for (int i = 1; i <= n; i++)
+        cin >> citizen[i];
+
+    for (int i = 1; i < n; i++) {
+        cin >> a >> b;
+        v[a].push_back(b);
+        v[b].push_back(a);
+    }
+
+    DFS(1);
+
+    cout << max(dp[1][0], dp[1][1]);
+
+    return 0;
+}
+------------------------------
+*/
+
+/* // 2252 - 줄 세우기
+#include <vector>
+#include <queue>
+#define MAX 32001
+
+vector<int> graph[MAX];
+int inDegree[MAX];
+int n, m;
+
+void TopologicalSort(void) {
+    queue<int> q;
+
+    for (int i = 1; i <= n; i++)
+        if (!inDegree[i])
+            q.push(i);
+
+    while (!q.empty())
+    {
+        int cur = q.front();
+        q.pop();
+        cout << cur << ' ';
+        for (int i = 0; i < graph[cur].size(); i++)
+        {
+            inDegree[graph[cur][i]]--;
+            if (!inDegree[graph[cur][i]])
+                q.push(graph[cur][i]);
+        }
+    }
+}
+
+int main(void) {
+    ios::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
+
+    cin >> n >> m;
+    for (int i = 0; i < m; i++)
+    {
+        int a, b;
+        cin >> a >> b;
+        graph[a].push_back(b);
+        inDegree[b]++;
+    }
+
+    TopologicalSort();
+
+    return 0;
+}
+--------------------------------
+*/
+
+/* // 2042 - 구간 합 구하기
+#define MAX 1000001
+
+int n, m, k;
+long long arr[MAX];
+
+long long segTree[MAX * 4];
+
+long long init(int start, int end, int nodeNum) {
+    if (start == end)
+        return segTree[nodeNum] = arr[start];
+
+    int mid = (start + end) / 2;
+    return segTree[nodeNum] = init(start, mid, nodeNum * 2) + init(mid + 1, end, nodeNum * 2 + 1);
+}
+
+long long subSum(int start, int end, int nodeNum, int left, int right) {
+    if (left > end || right < start)
+        return 0;
+    if (left <= start && end <= right)
+        return segTree[nodeNum];
+    int mid = (start + end) / 2;
+    return subSum(start, mid, nodeNum * 2, left, right) + subSum(mid + 1, end, nodeNum * 2 + 1, left, right);
+}
+
+void update(int start, int end, int nodeNum, int targetIdx, long long val) {
+    if (targetIdx < start || end < targetIdx)
+        return;
+
+    segTree[nodeNum] += val;
+    if (start == end) return;
+    int mid = (start + end) / 2;
+    update(start, mid, nodeNum * 2, targetIdx, val);
+    update(mid + 1, end, nodeNum * 2 + 1, targetIdx, val);
+}
+
+int main(void) {
+    ios::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
+
+    cin >> n >> m >> k;
+    int num;
+    for (int i = 0; i < n; i++)
+        cin >> arr[i];
+
+    init(0, n - 1, 1);
+
+    long long a, b, c;
+    for (int i = 0; i < m + k; i++) {
+        cin >> a >> b >> c;
+        if (a == 1) {
+            long long tmp = c - arr[b - 1];
+            arr[b - 1] = c;
+            update(0, n - 1, 1, b - 1, tmp);
+        }
+        else
+        {
+            cout << subSum(0, n - 1, 1, b - 1, c - 1) << '\n';
+        }
+    }
+
+    return 0;
+}
+--------------------------------
+*/
+
+/* // 11505 - 구간 곱 구하기
+#include <cmath>
+#define MAX 1000001
+#define MOD 1000000007
+
+long long arr[1000001];
+long long* segTree;
+
+int n, m, k, height, a;
+long long b, c, big, small;
+
+long long init(int nodeNum, int start, int end) {
+    if (start == end)
+        return segTree[nodeNum] = arr[start];
+
+    int mid = start + (end - start) / 2;
+    return segTree[nodeNum] = (init(2 * nodeNum, start, mid) * init(2 * nodeNum + 1, mid + 1, end)) % MOD;
+}
+
+long long mul(int node, int start, int end, int left, int right) {
+    if (left > end || right < start) return 1;
+    if (left <= start && end <= right) return segTree[node];
+    int mid = start + (end - start) / 2;
+    return (mul(node * 2, start, mid, left, right) * mul(node * 2 + 1, mid + 1, end, left, right)) % MOD;
+}
+
+long long update(int node, int start, int end, int idx, long long val) {
+    if (idx > end || idx < start) return segTree[node];
+    if (start == end) return segTree[node] = val;
+    int mid = start + (end - start) / 2;
+    return segTree[node] = (update(2 * node, start, mid, idx, val) * update(2 * node + 1, mid + 1, end, idx, val)) % MOD;
+}
+
+int main(void) {
+    ios::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
+
+    cin >> n >> m >> k;
+    height = ceil(log2(n));
+    segTree = new long long[1 << (height + 1)];
+    for (int i = 0; i < n; i++)
+        cin >> arr[i];
+
+    init(1, 0, n - 1);
+    for (int i = 0; i < m + k; i++) {
+        cin >> a >> b >> c;
+        if (a == 1) {
+            arr[b - 1] = c;
+            update(1, 0, n - 1, b - 1, c);
+        }
+        else
+        {
+            big = b > c ? b : c;
+            small = b > c ? c : b;
+            cout << mul(1, 0, n - 1, small - 1, big - 1) << '\n';
+        }
+    }
+
+    return 0;
+}
+--------------------------------
+*/
+
+/* // 2357 - 최솟값과 최댓값
+#include <cmath>
+#define MAX 1000000001
+
+long long* maxTree;
+long long* minTree;
+long long arr[100000];
+int n, height, query, big, small, a, b;
+
+int init(int node, int start, int end, bool maximum) {
+    if (start == end)
+    {
+        if (maximum) return maxTree[node] = arr[start];
+        else return minTree[node] = arr[start];
+    }
+    int mid = start + (end - start) / 2;
+    if (maximum)
+        return maxTree[node] = max(init(2 * node, start, mid, maximum), init(2 * node + 1, mid + 1, end, maximum));
+    return minTree[node] = min(init(2 * node, start, mid, maximum), init(2 * node + 1, mid + 1, end, maximum));
+}
+
+int findVal(int node, int start, int end, int left, int right, bool maximum) {
+    if (left > end || right < start) {
+        if (maximum) return -MAX;
+        return MAX;
+    }
+    if (left <= start && end <= right) {
+        if (maximum) return maxTree[node];
+        else return minTree[node];
+    }
+    int mid = start + (end - start) / 2;
+    if (maximum) return max(findVal(node * 2, start, mid, left, right, maximum), findVal(node * 2 + 1, mid + 1, end, left, right, maximum));
+    return min(findVal(node * 2, start, mid, left, right, maximum), findVal(node * 2 + 1, mid + 1, end, left, right, maximum));
+}
+
+
+int main(void) {
+    ios::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
+
+    cin >> n >> query;
+    height = ceil(log2(n));
+    minTree = new long long[1 << (height + 1)];
+    maxTree = new long long[1 << (height + 1)];
+
+    for (int i = 0; i < (1 << (height + 1)); i++)
+        minTree[i] = MAX;
+    for (int i = 0; i < n; i++)
+        cin >> arr[i];
+    init(1, 0, n - 1, true);
+    init(1, 0, n - 1, false);
+
+    for (int i = 0; i < query; i++)
+    {
+        cin >> a >> b;
+        big = a > b ? a : b;
+        small = a > b ? b : a;
+        cout << findVal(1, 0, n - 1, small - 1, big - 1, false) << " " << findVal(1, 0, n - 1, small - 1, big - 1, true) << "\n";
+    }
+
+    return 0;
+}
+--------------------------------
+*/
+
+/* // 1517 - 버블소트
+#include <cstdio>
+#include <vector>
+#include <algorithm>
+#define INF 1000000001
+using namespace std;
+
+vector<pair<int, int>> Data; // first : value, second : index
+vector<int> Tree;
+
+void updateTree(int Node, int Begin, int End, int Index) {
+    if (Begin == End) {
+        Tree[Node] = 1;
+        return;
+    }
+    int Mid = (Begin + End) / 2;
+    if (Index <= Mid) updateTree(Node * 2, Begin, Mid, Index);
+    else updateTree(Node * 2 + 1, Mid + 1, End, Index);
+    Tree[Node] = Tree[Node * 2] + Tree[Node * 2 + 1];
+}
+
+int cntLess(int Node, int Begin, int End, int Left, int Right) {
+    if (Left > End || Right < Begin) return 0;
+    if (Left <= Begin && Right >= End) return Tree[Node];
+    int Mid = (Begin + End) / 2;
+    int leftCnt = cntLess(Node * 2, Begin, Mid, Left, Right);
+    int rightCnt = cntLess(Node * 2 + 1, Mid + 1, End, Left, Right);
+    return leftCnt + rightCnt;
+}
+
+int main() {
+    int N, Value;
+    long long Ans = 0;
+    scanf("%d", &N);
+    Tree.resize(N * 4 + 1);
+    Data.push_back({ -INF, 0 });
+    for (int i = 1; i <= N; i++) {
+        scanf("%d", &Value);
+        Data.push_back({ Value, i });
+    }
+    sort(Data.begin(), Data.end());
+    for (int i = 1; i <= N; i++) {
+        Ans += (long long)cntLess(1, 1, N, Data[i].second + 1, N);
+        updateTree(1, 1, N, Data[i].second);
+    }
+    printf("%lld", Ans);
+}
+--------------------------------
+*/
 #pragma endregion
