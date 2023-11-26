@@ -1,14 +1,64 @@
 #include <iostream>
 using namespace std;
+#include <algorithm>
+#include <vector>
+#define MAX 1000001
 
+typedef long long ll;
+ll n, a[MAX], b[MAX], d[MAX], ans;
 
-int main() {
-    ios::sync_with_stdio(false);
-    cin.tie(NULL);
-    cout.tie(NULL);
+struct line {
+    ll a, b;
+    double s = 0;
+
+    line(ll a, ll b, double s) : a(a), b(b), s(s) {}
+
+    bool operator<(const line& l) const {
+        return s < l.s;
+    }
+};
+
+vector<line> v;
+
+int main()
+{
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
+
+    cin >> n;
+
+    for (int i = 0; i < n; i++) cin >> a[i];
+    for (int i = 0; i < n; i++) cin >> b[i];
+
+    v.emplace_back(b[0], 0, 0);
+
+    for (int i = 1; i < n; i++) {
+        line current(0, 0, a[i]);
+        line l = *(upper_bound(v.begin(), v.end(), current) - 1);
+
+        d[i] = l.a * a[i] + l.b;
+
+        line nxt(b[i], d[i], 0);
+        double crossPoint = 0;
+
+        while (v.size())
+        {
+            line prv = v.back();
+            crossPoint = (double)(prv.b - nxt.b) / (nxt.a - prv.a);
+            if (crossPoint <= prv.s) v.pop_back();
+            else
+                break;
+        }
+        nxt.s = crossPoint;
+        v.push_back(nxt);
+    }
+
+    cout << d[n - 1];
 
     return 0;
 }
+
+
 
 #pragma region 문제풀이
 
@@ -2459,5 +2509,955 @@ int main() {
 --------------------------------
 */
 #pragma endregion
+
+#pragma endregion
+
+#pragma region 문제풀이 3
+/* // 2170 - 선긋기
+#include <algorithm>
+#include <vector>
+
+int n;
+vector<pair<int, int>> arr;
+
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
+
+    cin >> n;
+    for (int i = 0; i < n; i++)
+    {
+        int a, b;
+        cin >> a >> b;
+        arr.push_back(make_pair(a, b));
+    }
+    sort(arr.begin(), arr.end());
+    int ans = 0;
+    int start = arr[0].first, end = arr[0].second;
+    for (int i = 1; i < n; i++) {
+        int s = arr[i].first, e = arr[i].second;
+        if (end >= s) {
+            if (end < e)
+                end = e;
+        }
+        else {
+            ans += end - start;
+            start = s, end = e;
+        }
+    }
+    ans += end - start;
+    cout << ans << '\n';
+
+    return 0;
+}
+------------------------------
+*/
+
+/* // 2836 - 수상택시
+#include <algorithm>
+#include <vector>
+
+int n;
+long long m;
+long long result;
+vector<pair<long long, long long >> people;
+
+void init() {
+    cin >> n >> m;
+    for (int i = 0; i < n; i++)
+    {
+        long long from, to;
+        cin >> from >> to;
+        if (from < to)
+            continue;
+        people.push_back({ to, from });
+    }
+
+    sort(people.begin(), people.end());
+}
+
+void calc() {
+    long long start = -1;
+    long long last = -1;
+
+    for (auto p : people) {
+        if (last < p.first)
+        {
+            result += (last - start);
+            start = p.first;
+        }
+        if (last < p.second) {
+            last = p.second;
+        }
+    }
+    result += (last - start);
+    result *= 2;
+    result += m;
+    cout << result;
+}
+
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
+
+    init();
+    calc();
+
+    return 0;
+}
+------------------------------
+*/
+
+/* // 5419 - 북서풍
+#define MAX_N 75001
+#include <algorithm>
+#include <vector>
+
+int tree[MAX_N * 4];
+vector<pair<int, int>> vec;
+vector<int> y_vec;
+
+void init(int now, int start, int end) {
+    if (start > end) return;
+    if (start == end)
+    {
+        tree[now] = 0;
+        return;
+    }
+    tree[now] = 0;
+    int mid = (start + end) / 2;
+    init(now * 2, start, mid);
+    init(now * 2 + 1, mid + 1, end);
+}
+
+void update(int now, int target, int start, int end) {
+    if (target > end || target < start) return;
+    if (start == end) {
+        tree[now]++;
+        return;
+    }
+    int mid = (start + end) / 2;
+    update(now * 2, target, start, mid);
+    update(now * 2 + 1, target, mid + 1, end);
+    tree[now] = tree[now * 2] + tree[now * 2 + 1];
+}
+
+int query(int now, int left, int right, int start, int end) {
+    if (left > end || right < start) return 0;
+    if (left <= start && end <= right) {
+        return tree[now];
+    }
+    int mid = (start + end) / 2;
+    return (query(now * 2, left, right, start, mid) + query(now * 2 + 1, left, right, mid + 1, end));
+}
+
+bool cmp_x_y(pair<int, int> a, pair<int, int> b) {
+    if (a.first == b.first) return a.second > b.second;
+    return a.first < b.first;
+}
+
+bool cmp_y(int a, int b) {
+    return a > b;
+}
+
+
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
+
+    int t;
+    cin >> t;
+    while (t--)
+    {
+        int n;
+        cin >> n;
+        vec.clear();
+        y_vec.clear();
+        init(1, 0, n - 1);
+        for (int i = 0; i < n; i++)
+        {
+            int x, y;
+            cin >> x >> y;
+            vec.push_back({ x , y });
+            y_vec.push_back(y);
+        }
+
+        long long ret = 0;
+        sort(vec.begin(), vec.end(), cmp_x_y);
+        sort(y_vec.begin(), y_vec.end(), cmp_y);
+        for (int i = 0; i < vec.size(); i++)
+        {
+            int x = vec[i].first, y = vec[i].second;
+            int index = upper_bound(y_vec.begin(), y_vec.end(), y, cmp_y) - y_vec.begin() - 1;
+            ret += query(1, 0, index, 0, n - 1);
+            update(1, index, 0, n - 1);
+        }
+        cout << ret << '\n';
+    }
+
+    return 0;
+}
+------------------------------
+*/
+
+/* // 7626 - 직사각형
+#include <algorithm>
+#include <vector>
+
+#define MAXSIZE 400001
+
+typedef pair<int, int> p;
+typedef long long ll;
+
+typedef struct vert {
+    int x;
+    p y;
+    bool start;
+} vert;
+
+int n;
+ll segtree[MAXSIZE * 4];
+ll cnt[MAXSIZE * 4];
+vector<vert> verts;
+vector<int> ylist;
+
+void update(int node, int start, int end, int l, int r, int val) {
+    if (l > end || r < start) return;
+    if (l <= start && end <= r)
+        cnt[node] += val;
+    else
+    {
+        int mid = (start + end) / 2;
+        update(node * 2, start, mid, l, r, val);
+        update(node * 2 + 1, mid + 1, end, l, r, val);
+    }
+
+    if (cnt[node])
+        segtree[node] = (ll)ylist[end] - ylist[start - 1];
+    else
+    {
+        if (start == end) segtree[node] = 0;
+        else
+            segtree[node] = segtree[node * 2] + segtree[node * 2 + 1];
+    }
+}
+
+ll get_answer() {
+    ll ret = 0;
+    int diff_x = 0, diff_y;
+    for (int i = 0; i < verts.size(); i++)
+    {
+        if (i > 0) {
+            diff_x = verts[i].x - verts[i - 1].x;
+            ret += segtree[1] * diff_x;
+        }
+        int val = verts[i].start == true ? 1 : -1;
+        int y1_idx = lower_bound(ylist.begin(), ylist.end(), verts[i].y.first) - ylist.begin();
+        int y2_idx = lower_bound(ylist.begin(), ylist.end(), verts[i].y.second) - ylist.begin();
+        update(1, 1, ylist.size(), y1_idx + 1, y2_idx, val);
+    }
+    return ret;
+}
+
+vert create_vert(int x, int y1, int y2, bool start) {
+    vert temp;
+    temp.x = x;
+    temp.y.first = y1; temp.y.second = y2;
+    temp.start = start;
+    return temp;
+}
+
+bool cmp_vert(vert a, vert b) {
+    return a.x < b.x;
+}
+
+void init() {
+    int x1, x2, y1, y2;
+    cin >> n;
+    for (int i = 0; i < n; i++) {
+        cin >> x1 >> x2 >> y1 >> y2;
+        verts.push_back(create_vert(x1, y1 + 1, y2 + 1, true));
+        verts.push_back(create_vert(x2, y1 + 1, y2 + 1, false));
+        ylist.push_back(y1 + 1);
+        ylist.push_back(y2 + 1);
+    }
+
+    sort(ylist.begin(), ylist.end());
+    ylist.erase(unique(ylist.begin(), ylist.end()), ylist.end());
+    sort(verts.begin(), verts.end(), cmp_vert);
+}
+
+
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
+
+    init();
+    ll answer = get_answer();
+    cout << answer << '\n';
+
+    return 0;
+}
+------------------------------
+*/
+
+/* // 1708 - 블록 껍질
+#include <algorithm>
+#include <stack>
+#include <vector>
+
+struct pos {
+    long long x, y;
+};
+
+vector <pos> v;
+stack <pos> s;
+
+long long ccw(pos a, pos b, pos c) {
+    return a.x * b.y + b.x * c.y + c.x * a.y - (b.x * a.y + c.x * b.y + a.x * c.y);
+}
+
+bool compare(pos a, pos b) {
+    long long cc = ccw(v[0], a, b);
+
+    if (cc) return cc > 0;
+    else if (a.y != b.y)
+        return a.y < b.y;
+    else
+        return a.x < b.x;
+}
+
+
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
+
+    int t;
+    cin >> t;
+
+    v.resize(t);
+    for (int i = 0; i < t; i++)
+        cin >> v[i].x >> v[i].y;
+
+    for (int i = 1; i < t; i++) {
+        if (v[i].y < v[0].y || (v[i].y == v[0].y && v[i].x < v[0].x)) {
+
+            long long temp = v[0].x;
+            v[0].x = v[i].x;
+            v[i].x = temp;
+
+            temp = v[0].y;
+            v[0].y = v[i].y;
+            v[i].y = temp;
+        }
+    }
+
+    sort(v.begin() + 1, v.end(), compare);
+
+    s.push(v[0]);
+    s.push(v[1]);
+
+    for (int i = 2; i < t; i++) {
+        while (s.size() >= 2) {
+            pos top2 = s.top();
+            s.pop();
+
+            pos top1 = s.top();
+            if (ccw(top1, top2, v[i]) > 0) {
+                s.push(top2);
+                break;
+            }
+        }
+        s.push(v[i]);
+    }
+
+    cout << s.size();
+
+    return 0;
+}
+------------------------------
+*/
+
+/* // 3679 - 단순 다각형
+#include <algorithm>
+#include <cmath>
+
+struct D {
+    int i, x, y;
+};
+
+D d[2020], mi;
+int ccw(D a, D b, D c) {
+    return (b.x - a.x) * (c.y - a.y) - (b.y - a.y) * (c.x - a.x);
+}
+
+bool cmp(D a, D b) {
+    int c = ccw(mi, a, b);
+    if (c == 0)
+        return abs(a.x - mi.x) + abs(a.y - mi.y) < abs(b.x - mi.x) + abs(b.y - mi.y);
+    if (c > 0)
+        return 1;
+    return 0;
+}
+
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
+
+    int c, idx;
+    cin >> c;
+    while (c--)
+    {
+        int n;
+        cin >> n;
+        mi = { -1, 99999, 99999 };
+        for (int i = 0; i < n; i++)
+        {
+            cin >> d[i].x >> d[i].y;
+            d[i].i = i;
+            if (mi.y > d[i].y || (mi.y == d[i].y && mi.x > d[i].x)) {
+                mi = { i, d[i].x, d[i].y };
+                idx = i;
+            }
+        }
+        swap(d[0], d[idx]);
+        sort(d + 1, d + n, cmp);
+        int l;
+        for (l = n - 2; l > 0; l--) if (ccw(d[0], d[l], d[n - 1]) != 0) break;
+        l++;
+        for (int i = l; i < (n + l + 1) / 2; i++) swap(d[i], d[n - i + l - 1]);
+        for (int i = 0; i < n; i++) cout << d[i].i << ' ';
+        cout << '\n';
+    }
+
+    return 0;
+}
+------------------------------
+
+/* // 
+
+------------------------------
+
+/* //
+
+------------------------------
+*/
+
+/* // 11376 - 열혈강호 2
+#include <queue>
+#include <vector>
+#include <algorithm>
+#define MAX 1003
+
+vector<int> adj[MAX];
+bool check[MAX];
+int d[MAX];
+
+bool dfs(int cur) {
+    for (int nxt : adj[cur]) {
+        if (check[nxt]) continue;
+        check[nxt] = true;
+        if (d[nxt] == 0 || dfs(d[nxt])) {
+            d[nxt] = cur;
+            return true;
+        }
+    }
+    return false;
+}
+
+int main() {
+    ios::sync_with_stdio(0);
+    cin.tie(0);
+    int N, M, S, num;
+    int cnt = 0;
+    cin >> N >> M;
+    for (int i = 1; i <= N; i++) {
+        cin >> S;
+        while (S--) {
+            cin >> num;
+            adj[i].push_back(num);
+        }
+    }
+    for (int i = 1; i <= N; i++) {
+        for (int j = 1; j <= 2; j++) {
+            fill(check, check + MAX, false);
+            if (dfs(i)) cnt++;
+        }
+    }
+    cout << cnt << "\n";
+}
+------------------------------
+*/
+
+/* // 1867 - 돌맹이 제거
+#include <vector>
+#include <string.h>
+
+int n, k, ans;
+bool visited[501];
+int bm[501];
+vector<vector<int>> grid(501);
+
+bool DFS(int row) {
+    if (visited[row])
+        return false;
+    visited[row] = true;
+
+    for (int i = 0; i < grid[row].size(); i++)
+    {
+        int column = grid[row][i];
+        if (bm[column] == 0 || DFS(bm[column])) {
+            bm[column] = row;
+            return true;
+        }
+    }
+    return false;
+}
+
+int main() {
+    ios::sync_with_stdio(0);
+    cin.tie(0);
+
+    cin >> n >> k;
+    for (int i = 0; i < k; i++)
+    {
+        int x, y;
+        cin >> x >> y;
+        grid[x].push_back(y);
+    }
+
+    for (int i = 1; i <= n; i++) {
+        memset(visited, false, n + 1);
+        if (DFS(i))
+            ans++;
+    }
+    cout << ans << '\n';
+
+    return 0;
+}
+------------------------------
+*/
+
+/* // 11378 - 열혈강호 4
+#include <vector>
+#include <cstring>
+
+const int MAX = 1e3 + 1;
+
+int n, m, k;
+vector<int> works[MAX];
+int worker2work[MAX], work2worker[MAX];
+bool visited[MAX];
+
+bool func(int worker) {
+    for (int workNum : works[worker]) {
+        if (visited[workNum])
+            continue;
+        visited[workNum] = true;
+        if (work2worker[workNum] == -1 || func(work2worker[workNum])) {
+            worker2work[worker] = workNum;
+            work2worker[workNum] = worker;
+
+            return true;
+        }
+    }
+    return false;
+}
+
+int main() {
+    ios::sync_with_stdio(0);
+    cin.tie(0);
+
+    cin >> n >> m >> k;
+
+    for (int i = 0; i < n; i++)
+    {
+        int cnt;
+        cin >> cnt;
+
+        for (int j = 0; j < cnt; j++)
+        {
+            int work;
+            cin >> work;
+
+            works[i].push_back(work - 1);
+        }
+    }
+
+    memset(worker2work, -1, sizeof(worker2work));
+    memset(work2worker, -1, sizeof(work2worker));
+
+    int result = 0;
+
+    for (int worker = 0; worker < n; worker++) {
+        if (worker2work[worker] == -1) {
+            memset(visited, false, sizeof(visited));
+            if (func(worker))
+                result++;
+        }
+    }
+
+    int points = 0;
+    while (1)
+    {
+        bool flag = false;
+        for (int worker = 0; worker < n && points < k; worker++)
+        {
+            memset(visited, false, sizeof(visited));
+            if (func(worker))
+            {
+                result++;
+                flag = true;
+                points++;
+                break;
+            }
+        }
+        if (flag == false)
+        {
+            break;
+        }
+    }
+
+    cout << result << '\n';
+
+    return 0;
+}
+------------------------------
+*/
+
+/* // 2365 - 숫자판 만들기
+#include <vector>
+#include <queue>
+#include <cstring>
+
+int c[111][111];
+int f[111][111];
+int bias = 50;
+int n;
+vector<int> g[111];
+int par[111];
+
+int a[55], b[55];
+int asum, bsum;
+
+int s = 101, t = 102;
+
+void init(int x) {
+    memset(f, 0, sizeof f);
+    for (int i = 1; i <= n; i++) {
+        for (int j = 1; j <= n; j++) {
+            c[i][j + bias] = x;
+        }
+    }
+}
+
+bool chk(int x) {
+    init(x);
+    int res = 0;
+    while (1) {
+        memset(par, -1, sizeof par);
+        queue<int> q; q.push(s);
+        while (q.size()) {
+            int now = q.front(); q.pop();
+            for (auto nxt : g[now]) {
+                if (par[nxt] == -1 && c[now][nxt] - f[now][nxt] > 0) {
+                    par[nxt] = now; q.push(nxt);
+                }
+            }
+        }
+        int flow = 1e9 + 7;
+        if (par[t] == -1) break;
+        for (int i = t; i != s; i = par[i]) {
+            int a = par[i], b = i;
+            flow = min(flow, c[a][b] - f[a][b]);
+        }
+        res += flow;
+        for (int i = t; i != s; i = par[i]) {
+            int a = par[i], b = i;
+            f[a][b] += flow; f[b][a] -= flow;
+        }
+    }
+    return asum == bsum && asum == res;
+}
+
+int main() {
+    ios_base::sync_with_stdio(0); cin.tie(0);
+    cin >> n;
+    for (int i = 1; i <= n; i++) cin >> a[i], asum += a[i];
+    for (int i = 1; i <= n; i++) cin >> b[i], bsum += b[i];
+    for (int i = 1; i <= n; i++) {
+        g[s].push_back(i);
+        c[s][i] = a[i];
+        c[i + bias][t] = b[i];
+        g[i + bias].push_back(t);
+    }
+    for (int i = 1; i <= n; i++) {
+        for (int j = 1; j <= n; j++) {
+            g[i].push_back(j + bias);
+            g[j + bias].push_back(i);
+        }
+    }
+
+    int l = 0, r = 10000;
+    int ans = -1;
+    while (l <= r) {
+        int m = l + r >> 1;
+        if (chk(m)) {
+            ans = m; r = m - 1;
+        }
+        else {
+            l = m + 1;
+        }
+    }
+    cout << ans << "\n";
+    chk(ans);
+    for (int i = 1; i <= n; i++) {
+        for (int j = 1; j <= n; j++) {
+            cout << f[i][j + bias] << " ";
+        }
+        cout << "\n";
+    }
+}
+------------------------------
+*/
+
+/* // 11408 - 열혈강호 5
+#include <vector>
+#include <queue>
+
+const int SOURCE = 800, SINK = 801, MAX = 802, MAX_VALUE = 987654321;
+int N, M, totalCost = 0, jobDone = 0;
+
+vector<int> map[MAX];
+int job[MAX][MAX] = { 0 };
+int flow[MAX][MAX] = { 0 };
+int cost[MAX][MAX] = { 0 };
+
+int lastIdx[MAX];
+int dist[MAX] = { 0 };
+bool inQueue[MAX] = { false };
+
+queue<int> q;
+
+void init() {
+    fill(lastIdx, lastIdx + MAX, -1);
+    fill(dist, dist + MAX, MAX_VALUE);
+    q.push(SOURCE);
+    inQueue[SOURCE] = true;
+    dist[SOURCE] = 0;
+}
+
+bool spfa() {
+    init();
+
+    while (!q.empty()) {
+        int now = q.front();
+        q.pop();
+        inQueue[now] = false;
+
+        for (int next : map[now]) {
+            int tempSum = dist[now] + cost[now][next];
+            if (job[now][next] > flow[now][next] && dist[next] > tempSum) {
+                dist[next] = tempSum;
+                lastIdx[next] = now;
+
+                if (!inQueue[next]) {
+                    inQueue[next] = true;
+                    q.push(next);
+                }
+            }
+        }
+    }
+    return dist[SINK] != MAX_VALUE;
+}
+
+int findMinFlow() {
+    int minFlow = MAX_VALUE;
+    for (int now = SINK; now != SOURCE; now = lastIdx[now]) {
+        minFlow = min(minFlow, job[lastIdx[now]][now] - flow[lastIdx[now]][now]);
+    }
+    return minFlow;
+}
+
+int update(int minFlow) {
+    int allSum = 0;
+    for (int now = SINK; now != SOURCE; now = lastIdx[now]) {
+        allSum += cost[lastIdx[now]][now];
+        flow[lastIdx[now]][now]++;
+        flow[now][lastIdx[now]]--;
+    }
+    return allSum;
+}
+
+int main()
+{
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
+
+    cin >> N >> M;
+    int size, jobType, fee;
+    for (int people = 0; people < N; people++) {
+        job[SOURCE][people] = 1;
+        map[SOURCE].push_back(people);
+        map[people].push_back(SOURCE);
+
+        cin >> size;
+        for (int i = 0; i < size; i++) {
+            cin >> jobType >> fee;
+            jobType += N - 1;
+
+            map[people].push_back(jobType);
+            map[jobType].push_back(people);
+
+            cost[people][jobType] = fee;
+            cost[jobType][people] = -fee;
+
+            job[people][jobType] = MAX_VALUE;
+        }
+    }
+
+    for (int jobType = N; jobType < N + M; jobType++) {
+        job[jobType][SINK] = 1;
+        map[jobType].push_back(SINK);
+        map[SINK].push_back(jobType);
+    }
+
+    while (spfa()) {
+        jobDone++;
+        totalCost += update(findMinFlow());
+    }
+
+    cout << jobDone << '\n';
+    cout << totalCost << '\n';
+
+    return 0;
+}
+------------------------------
+*/
+
+/* // 13261 - 탈옥
+using ll = long long;
+
+ll dp[805][8005];
+ll c[8005];
+ll pre[8005];
+int l, g;
+
+ll f(ll i, ll j) {
+    return(i - j) * (pre[i] - pre[j]);
+}
+
+void solve(int lev, int s, int e, int optl, int optr) {
+    if (s > e) return;
+    int mid = (s + e) >> 1;
+    int opt = -1;
+    ll& ans = dp[lev][mid];
+
+    for (int i = optl; i < min(mid, optr); ++i) {
+        ll val = dp[lev - 1][i] + (mid - i) * (pre[mid] - pre[i]);
+        if (opt == -1 || ans > val) {
+            opt = i;
+            ans = val;
+        }
+    }
+    solve(lev, s, mid - 1, optl, opt + 1);
+    solve(lev, mid + 1, e, opt, optr);
+}
+
+int main()
+{
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
+
+    cin >> l >> g;
+    if (g >= l)
+        g = l;
+    for (int i = 1; i <= l; ++i)
+        cin >> c[i];
+    for (int i = 1; i <= l; ++i)
+        pre[i] = pre[i - 1] + c[i];
+    for (int i = 1; i <= l; ++i)
+        dp[1][i] = pre[i] * i;
+    for (int i = 2; i <= g; ++i)
+        solve(i, 1, l, 0, l);
+
+    cout << dp[g][l] << '\n';
+
+    return 0;
+}
+------------------------------
+*/
+
+/* // 13263 - 나무 자르기
+#include <algorithm>
+#include <vector>
+#define MAX 1000001
+
+typedef long long ll;
+ll n, a[MAX], b[MAX], d[MAX], ans;
+
+struct line {
+    ll a, b;
+    double s = 0;
+
+    line(ll a, ll b, double s) : a(a), b(b), s(s) {}
+
+    bool operator<(const line& l) const {
+        return s < l.s;
+    }
+};
+
+vector<line> v;
+
+int main()
+{
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
+
+    cin >> n;
+
+    for (int i = 0; i < n; i++) cin >> a[i];
+    for (int i = 0; i < n; i++) cin >> b[i];
+
+    v.emplace_back(b[0], 0, 0);
+
+    for (int i = 1; i < n; i++) {
+        line current(0, 0, a[i]);
+        line l = *(upper_bound(v.begin(), v.end(), current) - 1);
+
+        d[i] = l.a * a[i] + l.b;
+
+        line nxt(b[i], d[i], 0);
+        double crossPoint = 0;
+
+        while (v.size())
+        {
+            line prv = v.back();
+            crossPoint = (double)(prv.b - nxt.b) / (nxt.a - prv.a);
+            if (crossPoint <= prv.s) v.pop_back();
+            else
+                break;
+        }
+        nxt.s = crossPoint;
+        v.push_back(nxt);
+    }
+
+    cout << d[n - 1];
+
+    return 0;
+}
+------------------------------
+*/
+
+/* //
+
+------------------------------
+*/
 
 #pragma endregion
