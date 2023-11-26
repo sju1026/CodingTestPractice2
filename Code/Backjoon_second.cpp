@@ -1,59 +1,11 @@
 #include <iostream>
 using namespace std;
-#include <algorithm>
-#include <vector>
-#define MAX 1000001
 
-typedef long long ll;
-ll n, a[MAX], b[MAX], d[MAX], ans;
-
-struct line {
-    ll a, b;
-    double s = 0;
-
-    line(ll a, ll b, double s) : a(a), b(b), s(s) {}
-
-    bool operator<(const line& l) const {
-        return s < l.s;
-    }
-};
-
-vector<line> v;
 
 int main()
 {
     ios_base::sync_with_stdio(0);
     cin.tie(0);
-
-    cin >> n;
-
-    for (int i = 0; i < n; i++) cin >> a[i];
-    for (int i = 0; i < n; i++) cin >> b[i];
-
-    v.emplace_back(b[0], 0, 0);
-
-    for (int i = 1; i < n; i++) {
-        line current(0, 0, a[i]);
-        line l = *(upper_bound(v.begin(), v.end(), current) - 1);
-
-        d[i] = l.a * a[i] + l.b;
-
-        line nxt(b[i], d[i], 0);
-        double crossPoint = 0;
-
-        while (v.size())
-        {
-            line prv = v.back();
-            crossPoint = (double)(prv.b - nxt.b) / (nxt.a - prv.a);
-            if (crossPoint <= prv.s) v.pop_back();
-            else
-                break;
-        }
-        nxt.s = crossPoint;
-        v.push_back(nxt);
-    }
-
-    cout << d[n - 1];
 
     return 0;
 }
